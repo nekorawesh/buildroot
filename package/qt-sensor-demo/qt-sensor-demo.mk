@@ -22,4 +22,9 @@ define QT_SENSOR_DEMO_INSTALL_TARGET_CMDS
 
 endef
 
+define QT_SENSOR_DEMO_INSTALL_INIT_SYSV
+        $(INSTALL) -D -m 755 package/qt-sensor-demo/S99qt-sensor-demo \
+                $(TARGET_DIR)/etc/init.d/S99qt-sensor-demo
+endef
+
 $(eval $(generic-package))
