@@ -1,0 +1,7 @@
+config BR2_PACKAGE_QT_SYSTEM_UPTIME
+	bool "qt-system-uptime"
+	depends on BR2_PACKAGE_QT5
+	select BR2_PACKAGE_QT5BASE_WIDGETS
+	select BR2_PACKAGE_QT5CHARTS
+	help
+	  The app reads and displays system uptime using qt

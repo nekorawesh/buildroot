@@ -1,8 +1,8 @@
 #!/bin/sh
 
-DAEMON="qt-sensor-demo"
+DAEMON="qt-system-uptime"
 DAEMON_ARGS="-platform linuxfb"
-PIDFILE="/var/run/qt-sensor-demo.pid"
+PIDFILE="/var/run/qt-system-uptime.pid"
 
 start() {
 	printf 'Starting %s: ' "$DAEMON"
