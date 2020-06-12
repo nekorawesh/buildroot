@@ -1,0 +1,66 @@
+From d373d54dcd57b6c8fc59c240ad7b9e12987d0f34 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Thu, 11 Jun 2020 18:47:06 +0300
+Subject: [PATCH 5/6] tfa-edit pmci
+
+Signed-off-by: Mahdi Noori <nekorawesh@gmail.com>
+---
+ fdts/stm32mp157a-maestro-cpx-mx.dts | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
+
+diff --git a/fdts/stm32mp157a-maestro-cpx-mx.dts b/fdts/stm32mp157a-maestro-cpx-mx.dts
+index 618e977a0..63210f3f0 100755
+--- a/fdts/stm32mp157a-maestro-cpx-mx.dts
++++ b/fdts/stm32mp157a-maestro-cpx-mx.dts
+@@ -244,10 +244,11 @@
+ &i2c4{
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c4_pins_mx>;
++	i2c-scl-rising-time-ns = <185>;
++	i2c-scl-falling-time-ns = <20>;
++	clock-frequency = <400000>;
+ 	status = "okay";
+-	secure-status = "okay";
+ 
+-	/* USER CODE BEGIN i2c4 */
+ 	pmic: stpmic@33 {
+ 		compatible = "st,stpmic1";
+ 		reg = <0x33>;
+@@ -301,6 +302,20 @@
+ 				regulator-initial-mode = <0>;
+ 			};
+ 
++			v1v8_audio: ldo1 {
++				regulator-name = "v1v8_audio";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++			};
++
++			v3v3_hdmi: ldo2 {
++				regulator-name = "v3v3_hdmi";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
+ 			vtt_ddr: ldo3 {
+ 				regulator-name = "vtt_ddr";
+ 				regulator-min-microvolt = <500000>;
+@@ -322,6 +337,13 @@
+ 				regulator-boot-on;
+ 			};
+ 
++			v1v2_hdmi: ldo6 {
++				regulator-name = "v1v2_hdmi";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++				regulator-always-on;
++			};
++
+ 			vref_ddr: vref_ddr {
+ 				regulator-name = "vref_ddr";
+ 				regulator-always-on;
+-- 
+2.27.0
+

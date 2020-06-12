@@ -1,0 +1,292 @@
+From c44d2a415bac9efb2dc4fd3c08d2d956d8db4ddf Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Thu, 11 Jun 2020 16:20:15 +0300
+Subject: [PATCH 2/6] tfa: adding pmic and voltages
+
+---
+ fdts/stm32mp157a-maestro-cpx-mx.dts | 236 +++++++++++++++++++++++++++-
+ 1 file changed, 234 insertions(+), 2 deletions(-)
+
+diff --git a/fdts/stm32mp157a-maestro-cpx-mx.dts b/fdts/stm32mp157a-maestro-cpx-mx.dts
+index 5b9f642d3..79590f30e 100755
+--- a/fdts/stm32mp157a-maestro-cpx-mx.dts
++++ b/fdts/stm32mp157a-maestro-cpx-mx.dts
+@@ -46,7 +46,6 @@
+ 		};
+ 
+ 		clk_hse: clk-hse {
+-
+ 			/* USER CODE BEGIN clk_hse */
+ 			/* USER CODE END clk_hse */
+ 		};
+@@ -191,6 +190,10 @@
+ 	secure-status = "okay";
+ 
+ 	/* USER CODE BEGIN bsec */
++	board_id: board_id@ec {
++		reg = <0xec 0x4>;
++		st,non-secure-otp;
++	};
+ 	/* USER CODE END bsec */
+ };
+ 
+@@ -245,13 +248,116 @@
+ 	secure-status = "okay";
+ 
+ 	/* USER CODE BEGIN i2c4 */
++		pmic: stpmic@33 {
++		compatible = "st,stpmic1";
++		reg = <0x33>;
++		interrupts-extended = <&exti_pwr 55 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		status = "okay";
++		wakeup-source;
++
++		regulators {
++			compatible = "st,stpmic1-regulators";
++
++			ldo1-supply = <&v3v3>;
++			ldo3-supply = <&vdd_ddr>;
++			ldo6-supply = <&v3v3>;
++
++			vddcore: buck1 {
++				regulator-name = "vddcore";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++				regulator-initial-mode = <0>;
++				regulator-over-current-protection;
++			};
++
++			vdd_ddr: buck2 {
++				regulator-name = "vdd_ddr";
++				regulator-min-microvolt = <1350000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++				regulator-initial-mode = <0>;
++				regulator-over-current-protection;
++			};
++
++			vdd: buck3 {
++				regulator-name = "vdd";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				st,mask-reset;
++				regulator-initial-mode = <0>;
++				regulator-over-current-protection;
++			};
++
++			v3v3: buck4 {
++				regulator-name = "v3v3";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				regulator-over-current-protection;
++				regulator-initial-mode = <0>;
++			};
++
++			v1v8_audio: ldo1 {
++				regulator-name = "v1v8_audio";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++			};
++
++			v3v3_hdmi: ldo2 {
++				regulator-name = "v3v3_hdmi";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vtt_ddr: ldo3 {
++				regulator-name = "vtt_ddr";
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <750000>;
++				regulator-always-on;
++				regulator-over-current-protection;
++			};
++
++			vdd_usb: ldo4 {
++				regulator-name = "vdd_usb";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			vdda: ldo5 {
++				regulator-name = "vdda";
++				regulator-min-microvolt = <2900000>;
++				regulator-max-microvolt = <2900000>;
++				regulator-boot-on;
++			};
++
++			v1v2_hdmi: ldo6 {
++				regulator-name = "v1v2_hdmi";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++				regulator-always-on;
++			};
++
++			vref_ddr: vref_ddr {
++				regulator-name = "vref_ddr";
++				regulator-always-on;
++				regulator-over-current-protection;
++			};
++		};
++	};
+ 	/* USER CODE END i2c4 */
+ };
+ 
+ &iwdg1{
+-	secure-status = "okay";
++	secure-status = "disabled";
+ 
+ 	/* USER CODE BEGIN iwdg1 */
++	timeout-sec = <32>;
+ 	/* USER CODE END iwdg1 */
+ };
+ 
+@@ -260,6 +366,17 @@
+ 	secure-status = "okay";
+ 
+ 	/* USER CODE BEGIN pwr */
++	pwr-regulators {
++		vdd-supply = <&vdd>;
++	};
++
++	system_suspend_supported_soc_modes = <
++		STM32_PM_CSLEEP_RUN
++		STM32_PM_CSTOP_ALLOW_LP_STOP
++		STM32_PM_CSTOP_ALLOW_STANDBY_DDR_SR
++	>;
++
++	system_off_soc_mode = <STM32_PM_CSTOP_ALLOW_STANDBY_DDR_OFF>;
+ 	/* USER CODE END pwr */
+ };
+ 
+@@ -314,5 +431,120 @@
+ };
+ 
+ /* USER CODE BEGIN addons */
++&nvmem_layout {
++	nvmem-cells = <&part_number_otp>,
++		      <&monotonic_otp>,
++		      <&nand_otp>,
++		      <&uid_otp>,
++		      <&package_otp>,
++		      <&hw2_otp>,
++		      <&board_id>;
++
++	nvmem-cell-names = "part_number_otp",
++			   "monotonic_otp",
++			   "nand_otp",
++			   "uid_otp",
++			   "package_otp",
++			   "hw2_otp",
++			   "board_id";
++};
++
++/* Low-power states of regulators */
++&vddcore {
++	lp-stop {
++		regulator-on-in-suspend;
++		regulator-suspend-microvolt = <1200000>;
++	};
++	standby-ddr-sr {
++		regulator-off-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
++&vdd_ddr {
++	lp-stop {
++		regulator-suspend-microvolt = <1350000>;
++		regulator-on-in-suspend;
++	};
++	standby-ddr-sr {
++		regulator-suspend-microvolt = <1350000>;
++		regulator-on-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
++&vdd {
++	lp-stop {
++		regulator-suspend-microvolt = <3300000>;
++		regulator-on-in-suspend;
++	};
++	standby-ddr-sr {
++		regulator-suspend-microvolt = <3300000>;
++		regulator-on-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-suspend-microvolt = <3300000>;
++		regulator-on-in-suspend;
++	};
++};
++
++&v3v3 {
++	lp-stop {
++		regulator-suspend-microvolt = <3300000>;
++		regulator-on-in-suspend;
++	};
++	standby-ddr-sr {
++		regulator-off-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
++&vtt_ddr {
++	lp-stop {
++		regulator-off-in-suspend;
++	};
++	standby-ddr-sr {
++		regulator-off-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
++&vdd_usb {
++	standby-ddr-sr {
++		regulator-off-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
++&vdda {
++	standby-ddr-sr {
++		regulator-off-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
++&vref_ddr {
++	lp-stop {
++		regulator-on-in-suspend;
++	};
++	standby-ddr-sr {
++		regulator-on-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
+ /* USER CODE END addons */
+ 
+-- 
+2.27.0
+

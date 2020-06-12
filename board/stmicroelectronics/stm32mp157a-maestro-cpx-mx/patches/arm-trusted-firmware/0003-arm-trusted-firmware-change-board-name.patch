@@ -1,0 +1,26 @@
+From d5f2522f465cea86550174497b0cfcc4cc820f7f Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Thu, 11 Jun 2020 17:14:43 +0300
+Subject: [PATCH 3/6] arm-trusted-firmware: change board name
+
+Signed-off-by: Mahdi Noori <nekorawesh@gmail.com>
+---
+ fdts/stm32mp157a-maestro-cpx-mx.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fdts/stm32mp157a-maestro-cpx-mx.dts b/fdts/stm32mp157a-maestro-cpx-mx.dts
+index 79590f30e..c236c3ce1 100755
+--- a/fdts/stm32mp157a-maestro-cpx-mx.dts
++++ b/fdts/stm32mp157a-maestro-cpx-mx.dts
+@@ -21,7 +21,7 @@
+ /* USER CODE END includes */
+ 
+ / {
+-	model = "STMicroelectronics custom STM32CubeMX board";
++	model = "STMicroelectronics Maestro CPX";
+ 	compatible = "st,stm32mp157a-maestro-cpx-mx", "st,stm32mp157";
+ 
+ 	/* USER CODE BEGIN root */
+-- 
+2.27.0
+

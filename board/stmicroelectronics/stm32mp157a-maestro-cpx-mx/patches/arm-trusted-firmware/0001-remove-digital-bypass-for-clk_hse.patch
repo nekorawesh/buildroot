@@ -1,0 +1,24 @@
+From f851eb75cfeb9e6e9383ceb220e4870522ab6254 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Thu, 11 Jun 2020 14:52:30 +0300
+Subject: [PATCH 1/6] remove digital bypass for clk_hse
+
+---
+ fdts/stm32mp157a-maestro-cpx-mx.dts | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/fdts/stm32mp157a-maestro-cpx-mx.dts b/fdts/stm32mp157a-maestro-cpx-mx.dts
+index 0e9216495..5b9f642d3 100755
+--- a/fdts/stm32mp157a-maestro-cpx-mx.dts
++++ b/fdts/stm32mp157a-maestro-cpx-mx.dts
+@@ -46,7 +46,6 @@
+ 		};
+ 
+ 		clk_hse: clk-hse {
+-			st,digbypass;
+ 
+ 			/* USER CODE BEGIN clk_hse */
+ 			/* USER CODE END clk_hse */
+-- 
+2.27.0
+
