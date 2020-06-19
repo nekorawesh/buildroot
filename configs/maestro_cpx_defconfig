@@ -1,22 +1,22 @@
 BR2_arm=y
 BR2_cortex_a7=y
-BR2_GLOBAL_PATCH_DIR="board/stmicroelectronics/stm32mp157a-maestro-cpx-mx/patches/"
+BR2_GLOBAL_PATCH_DIR="board/teknotelelectronics/maestro-cpx/patches/"
 BR2_TOOLCHAIN_EXTERNAL=y
 BR2_TOOLCHAIN_EXTERNAL_GDB_SERVER_COPY=y
-BR2_TARGET_GENERIC_HOSTNAME="Maestro CPX"
+BR2_TARGET_GENERIC_HOSTNAME="maestro-cpx"
 BR2_TARGET_GENERIC_ISSUE="Welcome to Maestro CPX"
 BR2_TARGET_GENERIC_ROOT_PASSWD="Rr123456"
-BR2_ROOTFS_OVERLAY="board/stmicroelectronics/stm32mp157a-maestro-cpx-mx/overlay/"
-BR2_ROOTFS_POST_IMAGE_SCRIPT="support/scripts/genimage.sh board/stmicroelectronics/stm32mp157a-maestro-cpx-mx/gen-swupdate-image.sh"
-BR2_ROOTFS_POST_SCRIPT_ARGS="-c board/stmicroelectronics/stm32mp157a-maestro-cpx-mx/genimage.cfg"
+BR2_ROOTFS_OVERLAY="board/teknotelelectronics/maestro-cpx/overlay/"
+BR2_ROOTFS_POST_IMAGE_SCRIPT="support/scripts/genimage.sh board/teknotelelectronics/maestro-cpx/gen-swupdate-image.sh"
+BR2_ROOTFS_POST_SCRIPT_ARGS="-c board/teknotelelectronics/maestro-cpx/genimage.cfg"
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_TARBALL=y
 BR2_LINUX_KERNEL_CUSTOM_TARBALL_LOCATION="$(call github,STMicroelectronics,linux,v4.19-stm32mp-r1.2)/linux-v4.19-stm32mp-r1.2.tar.gz"
 BR2_LINUX_KERNEL_USE_CUSTOM_CONFIG=y
-BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="board/stmicroelectronics/stm32mp157a-maestro-cpx-mx/linux.config"
+BR2_LINUX_KERNEL_CUSTOM_CONFIG_FILE="board/teknotelelectronics/maestro-cpx/linux.config"
 BR2_LINUX_KERNEL_CUSTOM_LOGO_PATH="images/splash.jpg"
 BR2_LINUX_KERNEL_DTS_SUPPORT=y
-BR2_LINUX_KERNEL_INTREE_DTS_NAME="stm32mp157a-maestro-cpx-mx"
+BR2_LINUX_KERNEL_INTREE_DTS_NAME="maestro-cpx"
 BR2_LINUX_KERNEL_DTB_OVERLAY_SUPPORT=y
 BR2_LINUX_KERNEL_INSTALL_TARGET=y
 BR2_PACKAGE_DEJAVU=y
@@ -39,7 +39,7 @@ BR2_PACKAGE_DHCPCD=y
 BR2_PACKAGE_DROPBEAR=y
 BR2_PACKAGE_GESFTPSERVER=y
 BR2_PACKAGE_SWUPDATE=y
-BR2_PACKAGE_SWUPDATE_CONFIG="board/stmicroelectronics/stm32mp157a-maestro-cpx-mx/swupdate.config"
+BR2_PACKAGE_SWUPDATE_CONFIG="board/teknotelelectronics/maestro-cpx/swupdate.config"
 # BR2_PACKAGE_SWUPDATE_INSTALL_WEBSITE is not set
 BR2_PACKAGE_NANO=y
 BR2_TARGET_ROOTFS_EXT2=y
@@ -52,7 +52,7 @@ BR2_TARGET_ARM_TRUSTED_FIRMWARE_CUSTOM_GIT=y
 BR2_TARGET_ARM_TRUSTED_FIRMWARE_CUSTOM_REPO_URL="https://github.com/STMicroelectronics/arm-trusted-firmware.git"
 BR2_TARGET_ARM_TRUSTED_FIRMWARE_CUSTOM_REPO_VERSION="v2.0-stm32mp-r3.1"
 BR2_TARGET_ARM_TRUSTED_FIRMWARE_PLATFORM="stm32mp1"
-BR2_TARGET_ARM_TRUSTED_FIRMWARE_ADDITIONAL_VARIABLES="DTB_FILE_NAME=stm32mp157a-maestro-cpx-mx.dtb AARCH32_SP=sp_min"
+BR2_TARGET_ARM_TRUSTED_FIRMWARE_ADDITIONAL_VARIABLES="DTB_FILE_NAME=maestro-cpx.dtb AARCH32_SP=sp_min"
 BR2_TARGET_ARM_TRUSTED_FIRMWARE_IMAGES="*.stm32"
 BR2_TARGET_ARM_TRUSTED_FIRMWARE_NEEDS_DTC=y
 BR2_TARGET_UBOOT=y
@@ -61,9 +61,9 @@ BR2_TARGET_UBOOT_CUSTOM_GIT=y
 BR2_TARGET_UBOOT_CUSTOM_REPO_URL="https://github.com/STMicroelectronics/u-boot.git"
 BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION="v2018.11-stm32mp-r2.1"
 BR2_TARGET_UBOOT_BOARD_DEFCONFIG="stm32mp15_trusted"
-BR2_TARGET_UBOOT_CONFIG_FRAGMENT_FILES="board/stmicroelectronics/stm32mp157a-maestro-cpx-mx/uboot-fragment.config"
+BR2_TARGET_UBOOT_CONFIG_FRAGMENT_FILES="board/teknotelelectronics/maestro-cpx/uboot-fragment.config"
 # BR2_TARGET_UBOOT_FORMAT_BIN is not set
 BR2_TARGET_UBOOT_FORMAT_CUSTOM=y
 BR2_TARGET_UBOOT_FORMAT_CUSTOM_NAME="u-boot.stm32"
-BR2_TARGET_UBOOT_CUSTOM_MAKEOPTS="DEVICE_TREE=stm32mp157a-maestro-cpx-mx"
+BR2_TARGET_UBOOT_CUSTOM_MAKEOPTS="DEVICE_TREE=maestro-cpx"
 BR2_PACKAGE_HOST_GENIMAGE=y
