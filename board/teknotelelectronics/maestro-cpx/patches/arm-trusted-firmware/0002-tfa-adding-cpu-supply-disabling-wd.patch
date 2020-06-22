@@ -1,0 +1,162 @@
+From 5164f9d76dfe55f29bd006bfa8e864c8869af4c6 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Fri, 19 Jun 2020 19:28:42 +0300
+Subject: [PATCH 2/3] tfa: adding cpu supply, disabling wd
+
+---
+ fdts/maestro-cpx.dts | 132 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 130 insertions(+), 2 deletions(-)
+
+diff --git a/fdts/maestro-cpx.dts b/fdts/maestro-cpx.dts
+index 76fe2469b..04a0cb31d 100755
+--- a/fdts/maestro-cpx.dts
++++ b/fdts/maestro-cpx.dts
+@@ -445,8 +445,8 @@
+ };
+ 
+ &iwdg2{
+-	status = "okay";
+-	secure-status = "okay";
++	status = "disabled";
++	secure-status = "disabled";
+ 
+ 	/* USER CODE BEGIN iwdg2 */
+ 	timeout-sec = <32>;
+@@ -526,6 +526,134 @@
+ };
+ 
+ /* USER CODE BEGIN addons */
++&cpu0{
++	cpu-supply = <&vddcore>;
++};
++
++&vddcore {
++	lp-stop {
++		regulator-on-in-suspend;
++		regulator-suspend-microvolt = <1200000>;
++	};
++	standby-ddr-sr {
++		regulator-off-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
++&vdd_ddr {
++	lp-stop {
++		regulator-suspend-microvolt = <1350000>;
++		regulator-on-in-suspend;
++	};
++	standby-ddr-sr {
++		regulator-suspend-microvolt = <1350000>;
++		regulator-on-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
++&vdd {
++	lp-stop {
++		regulator-suspend-microvolt = <3300000>;
++		regulator-on-in-suspend;
++	};
++	standby-ddr-sr {
++		regulator-suspend-microvolt = <3300000>;
++		regulator-on-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-suspend-microvolt = <3300000>;
++		regulator-on-in-suspend;
++	};
++};
++
++&v3v3 {
++	lp-stop {
++		regulator-suspend-microvolt = <3300000>;
++		regulator-on-in-suspend;
++	};
++	standby-ddr-sr {
++		regulator-off-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
++&v1v8_audio {
++	standby-ddr-sr {
++		regulator-off-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
++&v3v3_hdmi {
++	standby-ddr-sr {
++		regulator-off-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
++&vtt_ddr {
++	lp-stop {
++		regulator-off-in-suspend;
++	};
++	standby-ddr-sr {
++		regulator-off-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
++&vdd_usb {
++	standby-ddr-sr {
++		regulator-off-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
++&vdda {
++	standby-ddr-sr {
++		regulator-off-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
++&v1v2_hdmi {
++	standby-ddr-sr {
++		regulator-off-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
++&vref_ddr {
++	lp-stop {
++		regulator-on-in-suspend;
++	};
++	standby-ddr-sr {
++		regulator-on-in-suspend;
++	};
++	standby-ddr-off {
++		regulator-off-in-suspend;
++	};
++};
++
+ &rcc {
+ 	st,pkcs = <
+ 		CLK_CKPER_DISABLED
+-- 
+2.27.0
+

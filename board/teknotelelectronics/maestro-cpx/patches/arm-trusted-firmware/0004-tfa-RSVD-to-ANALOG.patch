@@ -1,0 +1,37 @@
+From 2edc14f3c792be60b396bd1863a7275aef198e95 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Mon, 22 Jun 2020 13:02:49 +0300
+Subject: [PATCH] tfa: RSVD to ANALOG
+
+---
+ fdts/maestro-cpx.dts | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/fdts/maestro-cpx.dts b/fdts/maestro-cpx.dts
+index d310cee98..08121b56d 100755
+--- a/fdts/maestro-cpx.dts
++++ b/fdts/maestro-cpx.dts
+@@ -461,16 +461,16 @@
+ 
+ &pwr{
+ 	/* USER CODE BEGIN pwr */
+-	pwr-regulators {
+-		vdd-supply = <&vdd>;
+-	};
+-
+ 	system_suspend_supported_soc_modes = <
+ 		STM32_PM_CSLEEP_RUN
+ 		STM32_PM_CSTOP_ALLOW_LP_STOP
+ 		STM32_PM_CSTOP_ALLOW_STANDBY_DDR_SR
+ 	>;
+ 	system_off_soc_mode = <STM32_PM_CSTOP_ALLOW_STANDBY_DDR_OFF>;
++
++	pwr-regulators {
++		vdd-supply = <&vdd>;
++	};
+ 	/* USER CODE END pwr */
+ };
+ 
+-- 
+2.27.0
+

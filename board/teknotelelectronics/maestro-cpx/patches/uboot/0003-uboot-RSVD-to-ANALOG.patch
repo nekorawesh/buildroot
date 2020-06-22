@@ -1,0 +1,123 @@
+From d3f2366db1d1169db1802011847af36a0617f8d4 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Mon, 22 Jun 2020 13:04:30 +0300
+Subject: [PATCH] uboot: RSVD to ANALOG
+
+---
+ arch/arm/dts/maestro-cpx-u-boot.dtsi | 21 +--------------------
+ arch/arm/dts/maestro-cpx.dts         | 28 ++++++++++++++--------------
+ 2 files changed, 15 insertions(+), 34 deletions(-)
+
+diff --git a/arch/arm/dts/maestro-cpx-u-boot.dtsi b/arch/arm/dts/maestro-cpx-u-boot.dtsi
+index b1e39f59d3..2edad6a26f 100755
+--- a/arch/arm/dts/maestro-cpx-u-boot.dtsi
++++ b/arch/arm/dts/maestro-cpx-u-boot.dtsi
+@@ -187,16 +187,6 @@
+ 	/* USER CODE END sdmmc1 */
+ };
+ 
+-sdmmc1_pins_mx: sdmmc1_mx-0 {
+-		u-boot,dm-spl;
+-		pins1 {
+-			u-boot,dm-spl;
+-		};
+-		pins2 {
+-			u-boot,dm-spl;
+-		};
+-	};
+-
+ &uart8{
+ 	u-boot,dm-pre-reloc;
+ 
+@@ -242,6 +232,7 @@ sdmmc1_pins_mx: sdmmc1_mx-0 {
+ 		CLK_LPTIM45_DISABLED
+ 	>;
+ };
++
+ &pmic {
+ 	u-boot,dm-pre-reloc;
+ };
+@@ -250,16 +241,6 @@ sdmmc1_pins_mx: sdmmc1_mx-0 {
+ 	regulator-always-on;
+ };
+ 
+-&uart8_pins_mx {
+-	u-boot,dm-pre-reloc;
+-	pins1 {
+-		u-boot,dm-pre-reloc;
+-	};
+-	pins2 {
+-		u-boot,dm-pre-reloc;
+-	};
+-};
+-
+ &usbotg_hs {
+ 	usb1600;
+ 	hnp-srp-disable;
+diff --git a/arch/arm/dts/maestro-cpx.dts b/arch/arm/dts/maestro-cpx.dts
+index b0ef8256f7..f40ab29ec8 100755
+--- a/arch/arm/dts/maestro-cpx.dts
++++ b/arch/arm/dts/maestro-cpx.dts
+@@ -250,45 +250,45 @@
+ 
+ 	m4_fdcan1_pins_mx: m4_fdcan1_mx-0 {
+ 		pins {
+-			pinmux = <STM32_PINMUX('A', 11, RSVD)>, /* FDCAN1_RX */
+-					 <STM32_PINMUX('A', 12, RSVD)>; /* FDCAN1_TX */
++			pinmux = <STM32_PINMUX('A', 11, ANALOG)>, /* FDCAN1_RX */
++					 <STM32_PINMUX('A', 12, ANALOG)>; /* FDCAN1_TX */
+ 		};
+ 	};
+ 
+ 	m4_fdcan2_pins_mx: m4_fdcan2_mx-0 {
+ 		pins {
+-			pinmux = <STM32_PINMUX('B', 5, RSVD)>, /* FDCAN2_RX */
+-					 <STM32_PINMUX('B', 6, RSVD)>; /* FDCAN2_TX */
++			pinmux = <STM32_PINMUX('B', 5, ANALOG)>, /* FDCAN2_RX */
++					 <STM32_PINMUX('B', 6, ANALOG)>; /* FDCAN2_TX */
+ 		};
+ 	};
+ 
+ 	m4_i2c2_pins_mx: m4_i2c2_mx-0 {
+ 		pins {
+-			pinmux = <STM32_PINMUX('D', 7, RSVD)>, /* I2C2_SCL */
+-					 <STM32_PINMUX('G', 15, RSVD)>; /* I2C2_SDA */
++			pinmux = <STM32_PINMUX('D', 7, ANALOG)>, /* I2C2_SCL */
++					 <STM32_PINMUX('G', 15, ANALOG)>; /* I2C2_SDA */
+ 		};
+ 	};
+ 
+ 	m4_i2c5_pins_mx: m4_i2c5_mx-0 {
+ 		pins {
+-			pinmux = <STM32_PINMUX('D', 0, RSVD)>, /* I2C5_SDA */
+-					 <STM32_PINMUX('D', 1, RSVD)>; /* I2C5_SCL */
++			pinmux = <STM32_PINMUX('D', 0, ANALOG)>, /* I2C5_SDA */
++					 <STM32_PINMUX('D', 1, ANALOG)>; /* I2C5_SCL */
+ 		};
+ 	};
+ 
+ 	m4_spi4_pins_mx: m4_spi4_mx-0 {
+ 		pins {
+-			pinmux = <STM32_PINMUX('E', 6, RSVD)>, /* SPI4_MOSI */
+-					 <STM32_PINMUX('E', 11, RSVD)>, /* SPI4_NSS */
+-					 <STM32_PINMUX('E', 12, RSVD)>, /* SPI4_SCK */
+-					 <STM32_PINMUX('E', 13, RSVD)>; /* SPI4_MISO */
++			pinmux = <STM32_PINMUX('E', 6, ANALOG)>, /* SPI4_MOSI */
++					 <STM32_PINMUX('E', 11, ANALOG)>, /* SPI4_NSS */
++					 <STM32_PINMUX('E', 12, ANALOG)>, /* SPI4_SCK */
++					 <STM32_PINMUX('E', 13, ANALOG)>; /* SPI4_MISO */
+ 		};
+ 	};
+ 
+ 	m4_usart2_pins_mx: m4_usart2_mx-0 {
+ 		pins {
+-			pinmux = <STM32_PINMUX('D', 5, RSVD)>, /* USART2_TX */
+-					 <STM32_PINMUX('D', 6, RSVD)>; /* USART2_RX */
++			pinmux = <STM32_PINMUX('D', 5, ANALOG)>, /* USART2_TX */
++					 <STM32_PINMUX('D', 6, ANALOG)>; /* USART2_RX */
+ 		};
+ 	};
+ 
+-- 
+2.27.0
+

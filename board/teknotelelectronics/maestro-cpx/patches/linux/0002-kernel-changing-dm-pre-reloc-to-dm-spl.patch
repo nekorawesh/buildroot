@@ -1,0 +1,157 @@
+From b56b132c458979d377eeeee6baa0c9af0fde0e97 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Mon, 22 Jun 2020 12:36:21 +0300
+Subject: [PATCH 2/2] kernel: changing dm-pre-reloc to dm-spl
+
+---
+ arch/arm/boot/dts/maestro-cpx.dts | 38 ++++++++++++++++---------------
+ 1 file changed, 20 insertions(+), 18 deletions(-)
+
+diff --git a/arch/arm/boot/dts/maestro-cpx.dts b/arch/arm/boot/dts/maestro-cpx.dts
+index c291eaca8c13..b0ef8256f769 100755
+--- a/arch/arm/boot/dts/maestro-cpx.dts
++++ b/arch/arm/boot/dts/maestro-cpx.dts
+@@ -108,7 +108,7 @@
+ 		blue {
+ 			label = "alive";
+ 			gpios = <&gpiof 8 GPIO_ACTIVE_HIGH>;
+-			linux,default-trigger = "heartbeat";
++			linux,default-trigger = "alive";
+ 			default-state = "off";
+ 		};
+ 	};
+@@ -153,8 +153,6 @@
+ }; /*root*/
+ 
+ &pinctrl {
+-	u-boot,dm-pre-reloc;
+-
+ 	eth1_pins_mx: eth1_mx-0 {
+ 		pins1 {
+ 			pinmux = <STM32_PINMUX('A', 0, AF11)>, /* ETH1_CRS */
+@@ -295,9 +293,9 @@
+ 	};
+ 
+ 	sdmmc1_pins_mx: sdmmc1_mx-0 {
+-		u-boot,dm-pre-reloc;
++		u-boot,dm-spl;
+ 		pins1 {
+-			u-boot,dm-pre-reloc;
++			u-boot,dm-spl;
+ 			pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1_D0 */
+ 					 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1_D1 */
+ 					 <STM32_PINMUX('C', 10, AF12)>, /* SDMMC1_D2 */
+@@ -308,7 +306,7 @@
+ 			slew-rate = <1>;
+ 		};
+ 		pins2 {
+-			u-boot,dm-pre-reloc;
++			u-boot,dm-spl;
+ 			pinmux = <STM32_PINMUX('C', 12, AF12)>; /* SDMMC1_CK */
+ 			bias-disable;
+ 			drive-push-pull;
+@@ -317,9 +315,9 @@
+ 	};
+ 
+ 	sdmmc1_opendrain_pins_mx: sdmmc1_opendrain_mx-0 {
+-		u-boot,dm-pre-reloc;
++		u-boot,dm-spl;
+ 		pins1 {
+-			u-boot,dm-pre-reloc;
++			u-boot,dm-spl;
+ 			pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1_D0 */
+ 					 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1_D1 */
+ 					 <STM32_PINMUX('C', 10, AF12)>, /* SDMMC1_D2 */
+@@ -329,14 +327,14 @@
+ 			slew-rate = <1>;
+ 		};
+ 		pins2 {
+-			u-boot,dm-pre-reloc;
++			u-boot,dm-spl;
+ 			pinmux = <STM32_PINMUX('C', 12, AF12)>; /* SDMMC1_CK */
+ 			bias-disable;
+ 			drive-push-pull;
+ 			slew-rate = <2>;
+ 		};
+ 		pins3 {
+-			u-boot,dm-pre-reloc;
++			u-boot,dm-spl;
+ 			pinmux = <STM32_PINMUX('D', 2, AF12)>; /* SDMMC1_CMD */
+ 			bias-disable;
+ 			drive-open-drain;
+@@ -345,9 +343,9 @@
+ 	};
+ 
+ 	sdmmc1_sleep_pins_mx: sdmmc1_sleep_mx-0 {
+-		u-boot,dm-pre-reloc;
++		u-boot,dm-spl;
+ 		pins {
+-			u-boot,dm-pre-reloc;
++			u-boot,dm-spl;
+ 			pinmux = <STM32_PINMUX('C', 8, ANALOG)>, /* SDMMC1_D0 */
+ 					 <STM32_PINMUX('C', 9, ANALOG)>, /* SDMMC1_D1 */
+ 					 <STM32_PINMUX('C', 10, ANALOG)>, /* SDMMC1_D2 */
+@@ -522,7 +520,6 @@
+ 	interrupt-parent = <&exti>;
+ 	interrupts = <68 1>;
+ 	interrupt-names = "wdg";
+-	wakeup-source;
+ 	/* USER CODE END m4_rproc */
+ 
+ 	m4_system_resources{
+@@ -665,6 +662,10 @@
+ 		wakeup-source;
+ 		status = "okay";
+ 
++		st,main-control-register = <0x04>;
++		st,vin-control-register = <0xc0>;
++		st,usb-control-register = <0x20>;
++
+ 		regulators {
+ 			compatible = "st,stpmic1-regulators";
+ 
+@@ -808,7 +809,7 @@
+ };
+ 
+ &iwdg2{
+-	status = "okay";
++	status = "disabled";
+ 
+ 	/* USER CODE BEGIN iwdg2 */
+ 	timeout-sec = <32>;
+@@ -898,12 +899,9 @@
+ };
+ 
+ &pwr{
+-	status = "okay";
+-
+ 	/* USER CODE BEGIN pwr */
+ 	pwr-regulators {
+ 		vdd-supply = <&vdd>;
+-		vdd_3v3_usbfs-supply = <&vdd_usb>;
+ 	};
+ 	/* USER CODE END pwr */
+ };
+@@ -931,7 +929,7 @@
+ };
+ 
+ &sdmmc1{
+-	u-boot,dm-pre-reloc;
++	u-boot,dm-spl;
+ 	pinctrl-names = "default", "opendrain", "sleep";
+ 	pinctrl-0 = <&sdmmc1_pins_mx>;
+ 	pinctrl-1 = <&sdmmc1_opendrain_pins_mx>;
+@@ -1035,6 +1033,10 @@
+ 	status = "okay";
+ 
+ 	/* USER CODE BEGIN usbotg_hs */
++	dr_mode = "peripheral";
++	force-b-session-valid;
++	phys = <&usbphyc_port1 0>;
++	phy-names = "usb2-phy";
+ 	/* USER CODE END usbotg_hs */
+ };
+ 
+-- 
+2.27.0
+
