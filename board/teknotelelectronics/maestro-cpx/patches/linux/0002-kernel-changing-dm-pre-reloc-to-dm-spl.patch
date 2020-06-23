@@ -1,7 +1,7 @@
 From b56b132c458979d377eeeee6baa0c9af0fde0e97 Mon Sep 17 00:00:00 2001
 From: Mahdi Noori <nekorawesh@gmail.com>
 Date: Mon, 22 Jun 2020 12:36:21 +0300
-Subject: [PATCH 2/2] kernel: changing dm-pre-reloc to dm-spl
+Subject: [PATCH 2/4] kernel: changing dm-pre-reloc to dm-spl
 
 ---
  arch/arm/boot/dts/maestro-cpx.dts | 38 ++++++++++++++++---------------

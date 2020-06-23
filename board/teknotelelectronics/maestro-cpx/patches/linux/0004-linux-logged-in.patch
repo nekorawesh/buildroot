@@ -1,0 +1,75 @@
+From d11946a044955331f59f64a032464b71d1b35970 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Tue, 23 Jun 2020 14:06:43 +0300
+Subject: [PATCH 4/4] linux: logged in
+
+---
+ arch/arm/boot/dts/maestro-cpx.dts | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/arch/arm/boot/dts/maestro-cpx.dts b/arch/arm/boot/dts/maestro-cpx.dts
+index f40ab29ec89b..9fcfb3b44396 100755
+--- a/arch/arm/boot/dts/maestro-cpx.dts
++++ b/arch/arm/boot/dts/maestro-cpx.dts
+@@ -75,8 +75,8 @@
+ 		};
+ 		/* USER CODE END reserved-memory */
+ 
+-		gpu_reserved: gpu@d4000000 {
+-			reg = <0xd4000000 0x4000000>;
++		gpu_reserved: gpu@dc000000 {
++			reg = <0xdc000000 0x4000000>;
+ 			no-map;
+ 		};
+ 	};
+@@ -108,7 +108,7 @@
+ 		blue {
+ 			label = "alive";
+ 			gpios = <&gpiof 8 GPIO_ACTIVE_HIGH>;
+-			linux,default-trigger = "alive";
++			linux,default-trigger = "heartbeat";
+ 			default-state = "off";
+ 		};
+ 	};
+@@ -565,7 +565,8 @@
+ 	status = "okay";
+ 
+ 	/* USER CODE BEGIN ethernet0 */
+-	phy-mode = "rmii";
++	local-mac-address = [00 80 ea 42 69 eb];
++	phy-mode = "mii";
+ 	max-speed = <1000>;
+ 	phy-handle = <&phy0>;
+ 
+@@ -573,8 +574,9 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		compatible = "snps,dwmac-mdio";
+-		phy0: ethernet-phy@0 {
+-			reg = <0>;
++		phy0: ethernet-phy@1 {
++			device_type = "ethernet-phy";
++			reg = <1>;
+ 		};
+ 	};
+ 	/* USER CODE END ethernet0 */
+@@ -900,6 +902,7 @@
+ 
+ &pwr{
+ 	/* USER CODE BEGIN pwr */
++	pwr-supply = <&vdd>;
+ 	pwr-regulators {
+ 		vdd-supply = <&vdd>;
+ 	};
+@@ -949,7 +952,7 @@
+ 	pinctrl-0 = <&sdmmc2_pins_mx>;
+ 	pinctrl-1 = <&sdmmc2_opendrain_pins_mx>;
+ 	pinctrl-2 = <&sdmmc2_sleep_pins_mx>;
+-	status = "okay";
++	status = "disabled";
+ 
+ 	/* USER CODE BEGIN sdmmc2 */
+ 	/* USER CODE END sdmmc2 */
+-- 
+2.27.0
+
