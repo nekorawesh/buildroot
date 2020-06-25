@@ -1,0 +1,162 @@
+From e5b60de5337829d4a29335d409cb71bbe18ee981 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Thu, 25 Jun 2020 13:03:48 +0300
+Subject: [PATCH 5/5] removed repeated dt defs
+
+---
+ fdts/maestro-cpx.dts | 131 +------------------------------------------
+ 1 file changed, 1 insertion(+), 130 deletions(-)
+
+diff --git a/fdts/maestro-cpx.dts b/fdts/maestro-cpx.dts
+index 08121b56d..9a4afd756 100755
+--- a/fdts/maestro-cpx.dts
++++ b/fdts/maestro-cpx.dts
+@@ -396,14 +396,9 @@
+ 
+ &bsec{
+ 	/* USER CODE BEGIN bsec */
+-	/* board_id: board_id@ec {
++	board_id: board_id@ec {
+ 		reg = <0xec 0x4>;
+ 		st,non-secure-otp;
+-	};*/
+-
+-	board_id: board_id@34 {
+-		reg = <0x34 0xc>;
+-		st,non-secure-otp;
+ 	};
+ 	/* USER CODE END bsec */
+ };
+@@ -546,129 +541,5 @@
+ 			   "hw2_otp",
+ 			   "board_id";
+ };
+-
+-&vddcore {
+-	lp-stop {
+-		regulator-on-in-suspend;
+-		regulator-suspend-microvolt = <1200000>;
+-	};
+-	standby-ddr-sr {
+-		regulator-off-in-suspend;
+-	};
+-	standby-ddr-off {
+-		regulator-off-in-suspend;
+-	};
+-};
+-
+-&vdd_ddr {
+-	lp-stop {
+-		regulator-suspend-microvolt = <1350000>;
+-		regulator-on-in-suspend;
+-	};
+-	standby-ddr-sr {
+-		regulator-suspend-microvolt = <1350000>;
+-		regulator-on-in-suspend;
+-	};
+-	standby-ddr-off {
+-		regulator-off-in-suspend;
+-	};
+-};
+-
+-&vdd {
+-	lp-stop {
+-		regulator-suspend-microvolt = <3300000>;
+-		regulator-on-in-suspend;
+-	};
+-	standby-ddr-sr {
+-		regulator-suspend-microvolt = <3300000>;
+-		regulator-on-in-suspend;
+-	};
+-	standby-ddr-off {
+-		regulator-suspend-microvolt = <3300000>;
+-		regulator-on-in-suspend;
+-	};
+-};
+-
+-&v3v3 {
+-	lp-stop {
+-		regulator-suspend-microvolt = <3300000>;
+-		regulator-on-in-suspend;
+-	};
+-	standby-ddr-sr {
+-		regulator-off-in-suspend;
+-	};
+-	standby-ddr-off {
+-		regulator-off-in-suspend;
+-	};
+-};
+-
+-&v1v8_audio {
+-	standby-ddr-sr {
+-		regulator-off-in-suspend;
+-	};
+-	standby-ddr-off {
+-		regulator-off-in-suspend;
+-	};
+-};
+-
+-&v3v3_hdmi {
+-	standby-ddr-sr {
+-		regulator-off-in-suspend;
+-	};
+-	standby-ddr-off {
+-		regulator-off-in-suspend;
+-	};
+-};
+-
+-&vtt_ddr {
+-	lp-stop {
+-		regulator-off-in-suspend;
+-	};
+-	standby-ddr-sr {
+-		regulator-off-in-suspend;
+-	};
+-	standby-ddr-off {
+-		regulator-off-in-suspend;
+-	};
+-};
+-
+-&vdd_usb {
+-	standby-ddr-sr {
+-		regulator-off-in-suspend;
+-	};
+-	standby-ddr-off {
+-		regulator-off-in-suspend;
+-	};
+-};
+-
+-&vdda {
+-	standby-ddr-sr {
+-		regulator-off-in-suspend;
+-	};
+-	standby-ddr-off {
+-		regulator-off-in-suspend;
+-	};
+-};
+-
+-&v1v2_hdmi {
+-	standby-ddr-sr {
+-		regulator-off-in-suspend;
+-	};
+-	standby-ddr-off {
+-		regulator-off-in-suspend;
+-	};
+-};
+-
+-&vref_ddr {
+-	lp-stop {
+-		regulator-on-in-suspend;
+-	};
+-	standby-ddr-sr {
+-		regulator-on-in-suspend;
+-	};
+-	standby-ddr-off {
+-		regulator-off-in-suspend;
+-	};
+-};
+ /* USER CODE END addons */
+ 
+-- 
+2.27.0
+

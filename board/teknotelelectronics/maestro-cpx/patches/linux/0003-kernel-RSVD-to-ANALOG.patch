@@ -1,7 +1,7 @@
 From e5d11ec6e84646ab0303d23ecc16bb246d0dce78 Mon Sep 17 00:00:00 2001
 From: Mahdi Noori <nekorawesh@gmail.com>
 Date: Mon, 22 Jun 2020 13:05:50 +0300
-Subject: [PATCH 3/4] kernel: RSVD to ANALOG
+Subject: [PATCH 3/5] kernel: RSVD to ANALOG
 
 ---
  arch/arm/boot/dts/maestro-cpx.dts | 28 ++++++++++++++--------------

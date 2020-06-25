@@ -1,7 +1,7 @@
 From 960d388fa527d9c57fc7adbe444b92989d1136e7 Mon Sep 17 00:00:00 2001
 From: Mahdi Noori <nekorawesh@gmail.com>
 Date: Mon, 22 Jun 2020 12:34:10 +0300
-Subject: [PATCH 2/4] uboot: changing dm-pre-reloc to dm-spl
+Subject: [PATCH 2/5] uboot: changing dm-pre-reloc to dm-spl
 
 ---
  arch/arm/dts/maestro-cpx-u-boot.dtsi | 24 +++++++++++++-----

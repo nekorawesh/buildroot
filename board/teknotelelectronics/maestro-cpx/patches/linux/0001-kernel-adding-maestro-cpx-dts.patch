@@ -1,7 +1,7 @@
 From 8d34cb0feb90d400600411d02b29189dcbca1426 Mon Sep 17 00:00:00 2001
 From: Mahdi Noori <nekorawesh@gmail.com>
 Date: Fri, 19 Jun 2020 17:06:25 +0300
-Subject: [PATCH 1/4] kernel: adding maestro-cpx dts
+Subject: [PATCH 1/5] kernel: adding maestro-cpx dts
 
 ---
  arch/arm/boot/dts/maestro-cpx.dts | 1133 +++++++++++++++++++++++++++++

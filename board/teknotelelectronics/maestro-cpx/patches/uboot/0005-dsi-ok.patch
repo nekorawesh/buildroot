@@ -1,0 +1,352 @@
+From acf47b61d6cf645110bf886d94c293560813f18e Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Thu, 25 Jun 2020 13:02:28 +0300
+Subject: [PATCH 5/5] dsi ok
+
+---
+ arch/arm/dts/maestro-cpx-u-boot.dtsi | 57 +++-------------
+ arch/arm/dts/maestro-cpx.dts         | 98 +++++++++++++++++++++++-----
+ 2 files changed, 91 insertions(+), 64 deletions(-)
+
+diff --git a/arch/arm/dts/maestro-cpx-u-boot.dtsi b/arch/arm/dts/maestro-cpx-u-boot.dtsi
+index 47b65809f4..ff1f523703 100755
+--- a/arch/arm/dts/maestro-cpx-u-boot.dtsi
++++ b/arch/arm/dts/maestro-cpx-u-boot.dtsi
+@@ -27,18 +27,21 @@
+ 	};
+ 	config {
+ 		u-boot,boot-led = "alive";
+-		u-boot,error-led = "comm";
++		u-boot,error-led = "error";
+ 	};
+ 	led {
+-		red {
+-			label = "comm";
+-			gpios = <&gpiof 10 GPIO_ACTIVE_LOW>;
++		alive {
++			label = "alive";
++			gpios = <&gpiof 8 GPIO_ACTIVE_HIGH>;
+ 			default-state = "off";
+ 			status = "okay";
+ 		};
+ 
+-		blue {
+-			default-state = "on";
++		comm {
++			label = "comm";
++			gpios = <&gpiof 10 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++			status = "okay";
+ 		};
+ 	};
+ 	/* USER CODE END root */
+@@ -195,44 +198,6 @@
+ };
+ 
+ /* USER CODE BEGIN addons */
+-&rcc {
+-	st,pkcs = <
+-		CLK_CKPER_DISABLED
+-		CLK_ETH_PLL4P
+-		CLK_SDMMC12_PLL4P
+-		CLK_DSI_DSIPLL
+-		CLK_STGEN_HSE
+-		CLK_USBPHY_HSE
+-		CLK_SPI2S1_DISABLED
+-		CLK_SPI2S23_DISABLED
+-		CLK_SPI45_PCLK2
+-		CLK_SPI6_DISABLED
+-		CLK_I2C46_HSI
+-		CLK_SDMMC3_DISABLED
+-		CLK_USBO_USBPHY
+-		CLK_ADC_DISABLED
+-		CLK_CEC_DISABLED
+-		CLK_I2C12_HSI
+-		CLK_I2C35_HSI
+-		CLK_UART1_DISABLED
+-		CLK_UART24_HSI
+-		CLK_UART35_HSI
+-		CLK_UART6_DISABLED
+-		CLK_UART78_HSI
+-		CLK_SPDIF_DISABLED
+-		CLK_FDCAN_PLL4R
+-		CLK_SAI1_DISABLED
+-		CLK_SAI2_DISABLED
+-		CLK_SAI3_DISABLED
+-		CLK_SAI4_DISABLED
+-		CLK_RNG1_LSI
+-		CLK_RNG2_LSI
+-		CLK_LPTIM1_DISABLED
+-		CLK_LPTIM23_DISABLED
+-		CLK_LPTIM45_DISABLED
+-	>;
+-};
+-
+ &pmic {
+ 	u-boot,dm-pre-reloc;
+ };
+@@ -240,9 +205,5 @@
+ &v3v3 {
+ 	regulator-always-on;
+ };
+-
+-&usbotg_hs {
+-	hnp-srp-disable;
+-};
+ /* USER CODE END addons */
+ 
+diff --git a/arch/arm/dts/maestro-cpx.dts b/arch/arm/dts/maestro-cpx.dts
+index 9fcfb3b443..b714cd6ccb 100755
+--- a/arch/arm/dts/maestro-cpx.dts
++++ b/arch/arm/dts/maestro-cpx.dts
+@@ -105,12 +105,18 @@
+ 
+ 	led {
+ 		compatible = "gpio-leds";
+-		blue {
++		alive {
+ 			label = "alive";
+ 			gpios = <&gpiof 8 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "heartbeat";
+ 			default-state = "off";
+ 		};
++
++		comm {
++			label = "comm";
++			gpios = <&gpiof 10 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
+ 	};
+ 
+ 	usb_phy_tuning: usb-phy-tuning {
+@@ -123,6 +129,13 @@
+ 		st,hs-rx-offset = <2>;
+ 		st,no-lsfs-sc;
+ 	};
++
++	panel_backlight: panel-backlight {
++		compatible = "gpio-backlight";
++		gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
++		default-on;
++		status = "okay";
++	};
+ 	/* USER CODE END root */
+ 
+ 	clocks {
+@@ -441,6 +454,16 @@
+ 		};
+ 	};
+ 
++	uart4_idle_pins_mx: uart4_idle_mx-0 {
++		pins1 {
++			pinmux = <STM32_PINMUX('A', 13, ANALOG)>; /* UART4_TX */
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
++			bias-disable;
++		};
++	};
++
+ 	uart8_pins_mx: uart8_mx-0 {
+ 		u-boot,dm-pre-reloc;
+ 		pins1 {
+@@ -466,6 +489,19 @@
+ 		};
+ 	};
+ 
++	uart8_idle_pins_mx: uart8_idle_mx-0 {
++		u-boot,dm-pre-reloc;
++		pins1 {
++			u-boot,dm-pre-reloc;
++			pinmux = <STM32_PINMUX('E', 0, AF8)>; /* UART8_RX */
++			bias-disable;
++		};
++		pins2 {
++			u-boot,dm-pre-reloc;
++			pinmux = <STM32_PINMUX('E', 1, ANALOG)>; /* UART8_TX */
++		};
++	};
++
+ 	usart3_pins_mx: usart3_mx-0 {
+ 		pins1 {
+ 			pinmux = <STM32_PINMUX('D', 8, AF7)>; /* USART3_TX */
+@@ -486,6 +522,16 @@
+ 		};
+ 	};
+ 
++	usart3_idle_pins_mx: usart3_idle_mx-0 {
++		pins1 {
++			pinmux = <STM32_PINMUX('D', 8, ANALOG)>; /* USART3_TX */
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('D', 9, AF7)>; /* USART3_RX */
++			bias-disable;
++		};
++	};
++
+ 	usb_otg_hs_pins_mx: usb_otg_hs_mx-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('A', 10, ANALOG)>; /* USB_OTG_HS_ID */
+@@ -520,6 +566,7 @@
+ 	interrupt-parent = <&exti>;
+ 	interrupts = <68 1>;
+ 	interrupt-names = "wdg";
++	wakeup-source;
+ 	/* USER CODE END m4_rproc */
+ 
+ 	m4_system_resources{
+@@ -574,9 +621,8 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		compatible = "snps,dwmac-mdio";
+-		phy0: ethernet-phy@1 {
+-			device_type = "ethernet-phy";
+-			reg = <1>;
++		phy0: ethernet-phy@0 {
++			reg = <0>;
+ 		};
+ 	};
+ 	/* USER CODE END ethernet0 */
+@@ -620,7 +666,7 @@
+ 		compatible = "focaltech,ft6236";
+ 		reg = <0x2a>;
+ 		interrupts = <2 2>;
+-		interrupt-parent = <&gpiof>;
++		interrupt-parent = <&gpiob>;
+ 		interrupt-controller;
+ 		touchscreen-size-x = <480>;
+ 		touchscreen-size-y = <800>;
+@@ -631,7 +677,7 @@
+ 		compatible = "focaltech,ft6336";
+ 		reg = <0x38>;
+ 		interrupts = <2 2>;
+-		interrupt-parent = <&gpiof>;
++		interrupt-parent = <&gpiob>;
+ 		interrupt-controller;
+ 		touchscreen-size-x = <480>;
+ 		touchscreen-size-y = <800>;
+@@ -664,10 +710,6 @@
+ 		wakeup-source;
+ 		status = "okay";
+ 
+-		st,main-control-register = <0x04>;
+-		st,vin-control-register = <0xc0>;
+-		st,usb-control-register = <0x20>;
+-
+ 		regulators {
+ 			compatible = "st,stpmic1-regulators";
+ 
+@@ -822,6 +864,15 @@
+ 	status = "okay";
+ 
+ 	/* USER CODE BEGIN ltdc */
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ltdc_ep1_out: endpoint@1 {
++			reg = <1>;
++			remote-endpoint = <&dsi_in>;
++		};
++	};
+ 	/* USER CODE END ltdc */
+ };
+ 
+@@ -902,9 +953,9 @@
+ 
+ &pwr{
+ 	/* USER CODE BEGIN pwr */
+-	pwr-supply = <&vdd>;
+ 	pwr-regulators {
+ 		vdd-supply = <&vdd>;
++		vdd_3v3_usbfs-supply = <&vdd_usb>;
+ 	};
+ 	/* USER CODE END pwr */
+ };
+@@ -979,20 +1030,25 @@
+ };
+ 
+ &uart4{
+-	pinctrl-names = "default", "sleep";
++	pinctrl-names = "default", "sleep", "idle";
+ 	pinctrl-0 = <&uart4_pins_mx>;
+ 	pinctrl-1 = <&uart4_sleep_pins_mx>;
++	pinctrl-2 = <&uart4_idle_pins_mx>;
+ 	status = "okay";
+ 
+ 	/* USER CODE BEGIN uart4 */
++	/delete-property/dmas;
++	/delete-property/dma-names;
+ 	/* USER CODE END uart4 */
+ };
+ 
+ &uart8{
+ 	u-boot,dm-pre-reloc;
+-	pinctrl-names = "default", "sleep";
++	pinctrl-names = "default", "sleep", "idle", "no_console_suspend";
+ 	pinctrl-0 = <&uart8_pins_mx>;
+ 	pinctrl-1 = <&uart8_sleep_pins_mx>;
++	pinctrl-2 = <&uart8_idle_pins_mx>;
++	pinctrl-3 = <&uart8_pins_mx>;
+ 	status = "okay";
+ 
+ 	/* USER CODE BEGIN uart8 */
+@@ -1002,12 +1058,15 @@
+ };
+ 
+ &usart3{
+-	pinctrl-names = "default", "sleep";
++	pinctrl-names = "default", "sleep", "idle";
+ 	pinctrl-0 = <&usart3_pins_mx>;
+ 	pinctrl-1 = <&usart3_sleep_pins_mx>;
++	pinctrl-2 = <&usart3_idle_pins_mx>;
+ 	status = "okay";
+ 
+ 	/* USER CODE BEGIN usart3 */
++	/delete-property/dmas;
++	/delete-property/dma-names;
+ 	/* USER CODE END usart3 */
+ };
+ 
+@@ -1017,6 +1076,7 @@
+ 	/* USER CODE BEGIN usbh_ehci */
+ 	phys = <&usbphyc_port0>;
+ 	phy-names = "usb";
++	vbus-supply = <&vbus_sw>;
+ 	/* USER CODE END usbh_ehci */
+ };
+ 
+@@ -1036,8 +1096,6 @@
+ 	status = "okay";
+ 
+ 	/* USER CODE BEGIN usbotg_hs */
+-	dr_mode = "peripheral";
+-	force-b-session-valid;
+ 	phys = <&usbphyc_port1 0>;
+ 	phy-names = "usb2-phy";
+ 	/* USER CODE END usbotg_hs */
+@@ -1087,6 +1145,13 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
++		port@0 {
++			reg = <0>;
++			dsi_in: endpoint {
++				remote-endpoint = <&ltdc_ep1_out>;
++			};
++		};
++
+ 		port@1 {
+ 			reg = <1>;
+ 			dsi_out: endpoint {
+@@ -1100,6 +1165,7 @@
+ 		reg = <0>;
+ 		reset-gpios = <&gpioe 4 GPIO_ACTIVE_LOW>;
+ 		power-supply = <&v3v3>;
++		backlight = <&panel_backlight>;
+ 		status = "okay";
+ 
+ 		port {
+-- 
+2.27.0
+
