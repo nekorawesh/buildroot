@@ -1,0 +1,107 @@
+From 4cd3cad1b83f3f91fcd67d19c73f99fa8973acf7 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Tue, 4 Aug 2020 15:20:29 +0300
+Subject: [PATCH] uboot: usbh and eth ok
+
+---
+ arch/arm/dts/maestro-cpx-u-boot.dtsi |  2 +-
+ arch/arm/dts/maestro-cpx.dts         | 28 +++++++++++-----------------
+ 2 files changed, 12 insertions(+), 18 deletions(-)
+
+diff --git a/arch/arm/dts/maestro-cpx-u-boot.dtsi b/arch/arm/dts/maestro-cpx-u-boot.dtsi
+index ff1f523703..c176e588ec 100755
+--- a/arch/arm/dts/maestro-cpx-u-boot.dtsi
++++ b/arch/arm/dts/maestro-cpx-u-boot.dtsi
+@@ -120,7 +120,7 @@
+ 	>;
+ 	st,pkcs = <
+ 		CLK_CKPER_DISABLED
+-		CLK_ETH_PLL4P
++		CLK_ETH_PLL3Q
+ 		CLK_SDMMC12_PLL4P
+ 		CLK_DSI_DSIPLL
+ 		CLK_STGEN_HSE
+diff --git a/arch/arm/dts/maestro-cpx.dts b/arch/arm/dts/maestro-cpx.dts
+index 9aaad640db..5b105ef7c1 100755
+--- a/arch/arm/dts/maestro-cpx.dts
++++ b/arch/arm/dts/maestro-cpx.dts
+@@ -612,17 +612,20 @@
+ 	status = "okay";
+ 
+ 	/* USER CODE BEGIN ethernet0 */
++	snps,reset-delays-us = <0>, <10000>, <1000000>;
++	snps,reset-gpio = <&gpioa 5 GPIO_ACTIVE_LOW>;
++	snps,reset-active-low = <1>;
+ 	local-mac-address = [00 80 ea 42 69 eb];
+ 	phy-mode = "mii";
+-	max-speed = <1000>;
++	max-speed = <100>;
+ 	phy-handle = <&phy0>;
+ 
+ 	mdio0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		compatible = "snps,dwmac-mdio";
+-		phy0: ethernet-phy@0 {
+-			reg = <0>;
++		phy0: ethernet-phy@1 {
++			reg = <1>;
+ 		};
+ 	};
+ 	/* USER CODE END ethernet0 */
+@@ -1070,16 +1073,6 @@
+ 	/* USER CODE END usart3 */
+ };
+ 
+-&usbh_ehci{
+-	status = "okay";
+-
+-	/* USER CODE BEGIN usbh_ehci */
+-	phys = <&usbphyc_port0>;
+-	phy-names = "usb";
+-	vbus-supply = <&vbus_sw>;
+-	/* USER CODE END usbh_ehci */
+-};
+-
+ &usbh_ohci{
+ 	status = "okay";
+ 
+@@ -1090,14 +1083,17 @@
+ };
+ 
+ &usbotg_hs{
+-	pinctrl-names = "default", "sleep";
++	pinctrl-names = "default";
+ 	pinctrl-0 = <&usb_otg_hs_pins_mx>;
+-	pinctrl-1 = <&usb_otg_hs_sleep_pins_mx>;
+ 	status = "okay";
+ 
+ 	/* USER CODE BEGIN usbotg_hs */
++	compatible = "st,stm32mp1-hsotg", "snps,dwc2";
++	dr_mode = "peripheral";
++	force-b-session-valid;
+ 	phys = <&usbphyc_port1 0>;
+ 	phy-names = "usb2-phy";
++	vbus-supply = <&vbus_otg>;
+ 	/* USER CODE END usbotg_hs */
+ };
+ 
+@@ -1110,7 +1106,6 @@
+ };
+ 
+ &usbphyc_port0{
+-	status = "okay";
+ 
+ 	/* USER CODE BEGIN usbphyc_port0 */
+ 	st,phy-tuning = <&usb_phy_tuning>;
+@@ -1118,7 +1113,6 @@
+ };
+ 
+ &usbphyc_port1{
+-	status = "okay";
+ 
+ 	/* USER CODE BEGIN usbphyc_port1 */
+ 	st,phy-tuning = <&usb_phy_tuning>;
+-- 
+2.28.0
+
