@@ -1,0 +1,25 @@
+From b648abbfb6212514436d96de4c72ecedbd869623 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Wed, 12 Aug 2020 18:00:12 +0300
+Subject: [PATCH] usb_otg dr_mode
+
+---
+ arch/arm/dts/maestro-cpx.dts | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/arch/arm/dts/maestro-cpx.dts b/arch/arm/dts/maestro-cpx.dts
+index 43fe5b5565..f70f52453b 100755
+--- a/arch/arm/dts/maestro-cpx.dts
++++ b/arch/arm/dts/maestro-cpx.dts
+@@ -1098,8 +1098,6 @@
+ 
+ 	/* USER CODE BEGIN usbotg_hs */
+ 	compatible = "st,stm32mp1-hsotg", "snps,dwc2";
+-	dr_mode = "peripheral";
+-	force-b-session-valid;
+ 	phys = <&usbphyc_port1 0>;
+ 	phy-names = "usb2-phy";
+ 	vbus-supply = <&vbus_otg>;
+-- 
+2.28.0
+
