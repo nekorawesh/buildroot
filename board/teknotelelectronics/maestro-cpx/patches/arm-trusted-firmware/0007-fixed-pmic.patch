@@ -1,0 +1,349 @@
+From f68ff3239efc05e436a508d40a53301dbc136226 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Thu, 3 Dec 2020 18:29:46 +0300
+Subject: [PATCH] fixed pmic
+
+---
+ fdts/maestro-cpx.dts | 175 ++++++++++++++++++++++++++++---------------
+ 1 file changed, 114 insertions(+), 61 deletions(-)
+
+diff --git a/fdts/maestro-cpx.dts b/fdts/maestro-cpx.dts
+index 05a90e37e..d345d427c 100755
+--- a/fdts/maestro-cpx.dts
++++ b/fdts/maestro-cpx.dts
+@@ -26,6 +26,19 @@
+ 	compatible = "st,maestro-cpx", "st,stm32mp157";
+ 
+ 	/* USER CODE BEGIN root */
++	memory@c0000000{
++		device_type = "memory";
++		reg = <0xc0000000 0x20000000>;
++	};
++
++	vin:vin{
++		compatible = "regulator-fixed";
++		regulator-name = "vin";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+@@ -85,6 +98,29 @@
+ 		};
+ 	};
+ 
++	sdmmc2_pins_mx: sdmmc2_mx-0 {
++		pins1 {
++			pinmux = <STM32_PINMUX('A', 8, AF9)>, /* SDMMC2_D4 */
++					 <STM32_PINMUX('B', 3, AF9)>, /* SDMMC2_D2 */
++					 <STM32_PINMUX('B', 4, AF9)>, /* SDMMC2_D3 */
++					 <STM32_PINMUX('B', 9, AF10)>, /* SDMMC2_D5 */
++					 <STM32_PINMUX('B', 14, AF9)>, /* SDMMC2_D0 */
++					 <STM32_PINMUX('B', 15, AF9)>, /* SDMMC2_D1 */
++					 <STM32_PINMUX('C', 7, AF10)>, /* SDMMC2_D7 */
++					 <STM32_PINMUX('E', 5, AF9)>, /* SDMMC2_D6 */
++					 <STM32_PINMUX('G', 6, AF10)>; /* SDMMC2_CMD */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <1>;
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('E', 3, AF9)>; /* SDMMC2_CK */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <3>;
++		};
++	};
++
+ 	uart8_pins_mx: uart8_mx-0 {
+ 		pins1 {
+ 			pinmux = <STM32_PINMUX('E', 0, AF8)>; /* UART8_RX */
+@@ -98,6 +134,12 @@
+ 		};
+ 	};
+ 
++	usb_otg_hs_pins_mx: usb_otg_hs_mx-0 {
++		pins {
++			pinmux = <STM32_PINMUX('A', 10, ANALOG)>; /* USB_OTG_HS_ID */
++		};
++	};
++
+ 	/* USER CODE BEGIN pinctrl */
+ 	/* USER CODE END pinctrl */
+ };
+@@ -131,53 +173,68 @@
+ 		wakeup-source;
+ 		status = "okay";
+ 
+-		regulators {
++		regulators{
+ 			compatible = "st,stpmic1-regulators";
+-
++			buck1-supply = <&vin>;
++			buck2-supply = <&vin>;
++			buck3-supply = <&vin>;
++			buck4-supply = <&vin>;
+ 			ldo1-supply = <&v3v3>;
++			ldo2-supply = <&vin>;
+ 			ldo3-supply = <&vdd_ddr>;
++			ldo4-supply = <&vin>;
++			ldo5-supply = <&vin>;
+ 			ldo6-supply = <&v3v3>;
++			vref_ddr-supply = <&vin>;
++			boost-supply = <&vin>;
++			pwr_sw1-supply = <&vin>;
+ 
+-			vddcore: buck1 {
++			vddcore:buck1{
+ 				regulator-name = "vddcore";
+ 				regulator-min-microvolt = <1200000>;
+ 				regulator-max-microvolt = <1350000>;
+ 				regulator-always-on;
+ 				regulator-initial-mode = <0>;
+ 				regulator-over-current-protection;
+-				lp-stop {
++
++				lp-stop{
+ 					regulator-on-in-suspend;
+ 					regulator-suspend-microvolt = <1200000>;
+ 				};
+-				standby-ddr-sr {
++
++				standby-ddr-sr{
+ 					regulator-off-in-suspend;
+ 				};
+-				standby-ddr-off {
++
++				standby-ddr-off{
+ 					regulator-off-in-suspend;
+ 				};
+ 			};
+ 
+-			vdd_ddr: buck2 {
++			vdd_ddr:buck2{
+ 				regulator-name = "vdd_ddr";
+ 				regulator-min-microvolt = <1350000>;
+ 				regulator-max-microvolt = <1350000>;
+ 				regulator-always-on;
+ 				regulator-initial-mode = <0>;
+ 				regulator-over-current-protection;
+-				lp-stop {
++
++				lp-stop{
+ 					regulator-suspend-microvolt = <1350000>;
+ 					regulator-on-in-suspend;
+ 				};
+-				standby-ddr-sr {
++
++				standby-ddr-sr{
+ 					regulator-suspend-microvolt = <1350000>;
+ 					regulator-on-in-suspend;
+ 				};
+-				standby-ddr-off {
++
++				standby-ddr-off{
+ 					regulator-off-in-suspend;
+ 				};
+ 			};
+ 
+-			vdd: buck3 {
++			vdd:buck3{
+ 				regulator-name = "vdd";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+@@ -185,136 +242,130 @@
+ 				st,mask-reset;
+ 				regulator-initial-mode = <0>;
+ 				regulator-over-current-protection;
+-				lp-stop {
++
++				lp-stop{
+ 					regulator-suspend-microvolt = <3300000>;
+ 					regulator-on-in-suspend;
+ 				};
+-				standby-ddr-sr {
++
++				standby-ddr-sr{
+ 					regulator-suspend-microvolt = <3300000>;
+ 					regulator-on-in-suspend;
+ 				};
+-				standby-ddr-off {
++
++				standby-ddr-off{
+ 					regulator-suspend-microvolt = <3300000>;
+ 					regulator-on-in-suspend;
+ 				};
+ 			};
+ 
+-			v3v3: buck4 {
++			v3v3:buck4{
+ 				regulator-name = "v3v3";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 				regulator-over-current-protection;
+ 				regulator-initial-mode = <0>;
+-				lp-stop {
++
++				lp-stop{
+ 					regulator-suspend-microvolt = <3300000>;
+ 					regulator-on-in-suspend;
+ 				};
+-				standby-ddr-sr {
++
++				standby-ddr-sr{
+ 					regulator-off-in-suspend;
+ 				};
+-				standby-ddr-off {
++
++				standby-ddr-off{
+ 					regulator-off-in-suspend;
+ 				};
+ 			};
+ 
+-			v1v8_audio: ldo1 {
+-				regulator-name = "v1v8_audio";
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <1800000>;
+-				regulator-always-on;
+-				standby-ddr-sr {
+-						regulator-off-in-suspend;
+-					};
+-					standby-ddr-off {
+-						regulator-off-in-suspend;
+-					};
+-			};
+-
+-			v3v3_hdmi: ldo2 {
+-				regulator-name = "v3v3_hdmi";
++			v3v3_lcd:ldo2{
++				regulator-name = "v3v3_lcd";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+-				standby-ddr-sr {
++
++				standby-ddr-sr{
+ 					regulator-off-in-suspend;
+ 				};
+-				standby-ddr-off {
++
++				standby-ddr-off{
+ 					regulator-off-in-suspend;
+ 				};
+ 			};
+ 
+-			vtt_ddr: ldo3 {
++			vtt_ddr:ldo3{
+ 				regulator-name = "vtt_ddr";
+ 				regulator-min-microvolt = <500000>;
+ 				regulator-max-microvolt = <750000>;
+ 				regulator-always-on;
+ 				regulator-over-current-protection;
+-				lp-stop {
++
++				lp-stop{
+ 					regulator-off-in-suspend;
+ 				};
+-				standby-ddr-sr {
++
++				standby-ddr-sr{
+ 					regulator-off-in-suspend;
+ 				};
+-				standby-ddr-off {
++
++				standby-ddr-off{
+ 					regulator-off-in-suspend;
+ 				};
+ 			};
+ 
+-			vdd_usb: ldo4 {
++			vdd_usb:ldo4{
+ 				regulator-name = "vdd_usb";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+-				standby-ddr-sr {
++				regulator-always-on;
++
++				standby-ddr-sr{
+ 					regulator-off-in-suspend;
+ 				};
+-				standby-ddr-off {
++
++				standby-ddr-off{
+ 					regulator-off-in-suspend;
+ 				};
+ 			};
+ 
+-			vdda: ldo5 {
++			vdda:ldo5{
+ 				regulator-name = "vdda";
+ 				regulator-min-microvolt = <2900000>;
+ 				regulator-max-microvolt = <2900000>;
+ 				regulator-boot-on;
+-				standby-ddr-sr {
+-					regulator-off-in-suspend;
+-				};
+-				standby-ddr-off {
+-					regulator-off-in-suspend;
+-				};
+-			};
+ 
+-			v1v2_hdmi: ldo6 {
+-				regulator-name = "v1v2_hdmi";
+-				regulator-min-microvolt = <1200000>;
+-				regulator-max-microvolt = <1200000>;
+-				regulator-always-on;
+-				standby-ddr-sr {
++				standby-ddr-sr{
+ 					regulator-off-in-suspend;
+ 				};
+-				standby-ddr-off {
++
++				standby-ddr-off{
+ 					regulator-off-in-suspend;
+ 				};
+ 			};
+ 
+-			vref_ddr: vref_ddr {
++			vref_ddr:vref_ddr{
+ 				regulator-name = "vref_ddr";
+ 				regulator-always-on;
+ 				regulator-over-current-protection;
+-				lp-stop {
++
++				lp-stop{
+ 					regulator-on-in-suspend;
+ 				};
+-				standby-ddr-sr {
++
++				standby-ddr-sr{
+ 					regulator-on-in-suspend;
+ 				};
+-				standby-ddr-off {
++
++				standby-ddr-off{
+ 					regulator-off-in-suspend;
+ 				};
+ 			};
+ 		};
+ 	};
++
+ 	/* USER CODE END i2c4 */
+ };
+ 
+@@ -465,6 +516,8 @@
+ 
+ 	pwr-regulators {
+ 		vdd-supply = <&vdd>;
++		vdd_3v3_usbfs-supply = <&vdd_usb>;
++		status = "okay";
+ 	};
+ 	/* USER CODE END pwr */
+ };
+-- 
+2.29.2
+

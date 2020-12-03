@@ -1,0 +1,261 @@
+From bea63bf4b684a1cf768ea2add9a1ddc345d6f7aa Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Thu, 3 Dec 2020 18:25:36 +0300
+Subject: [PATCH] usb otg ok, emmc init error
+
+---
+ arch/arm/dts/maestro-cpx.dts | 117 +++++++++++++++++------------------
+ 1 file changed, 56 insertions(+), 61 deletions(-)
+
+diff --git a/arch/arm/dts/maestro-cpx.dts b/arch/arm/dts/maestro-cpx.dts
+index 5b105ef7c1..faae8bbdaa 100755
+--- a/arch/arm/dts/maestro-cpx.dts
++++ b/arch/arm/dts/maestro-cpx.dts
+@@ -136,6 +136,14 @@
+ 		default-on;
+ 		status = "okay";
+ 	};
++
++	vin:vin{
++		compatible = "regulator-fixed";
++		regulator-name = "vin";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
+ 	/* USER CODE END root */
+ 
+ 	clocks {
+@@ -713,16 +721,23 @@
+ 		wakeup-source;
+ 		status = "okay";
+ 
+-		regulators {
++		regulators{
+ 			compatible = "st,stpmic1-regulators";
+-
++			buck1-supply = <&vin>;
++			buck2-supply = <&vin>;
++			buck3-supply = <&vin>;
++			buck4-supply = <&vin>;
+ 			ldo1-supply = <&v3v3>;
++			ldo2-supply = <&vin>;
+ 			ldo3-supply = <&vdd_ddr>;
++			ldo4-supply = <&vin>;
++			ldo5-supply = <&vin>;
+ 			ldo6-supply = <&v3v3>;
+-			pwr_sw1-supply = <&bst_out>;
+-			pwr_sw2-supply = <&bst_out>;
++			vref_ddr-supply = <&vin>;
++			boost-supply = <&vin>;
++			pwr_sw1-supply = <&vin>;
+ 
+-			vddcore: buck1 {
++			vddcore:buck1{
+ 				regulator-name = "vddcore";
+ 				regulator-min-microvolt = <1200000>;
+ 				regulator-max-microvolt = <1350000>;
+@@ -731,7 +746,7 @@
+ 				regulator-over-current-protection;
+ 			};
+ 
+-			vdd_ddr: buck2 {
++			vdd_ddr:buck2{
+ 				regulator-name = "vdd_ddr";
+ 				regulator-min-microvolt = <1350000>;
+ 				regulator-max-microvolt = <1350000>;
+@@ -740,7 +755,7 @@
+ 				regulator-over-current-protection;
+ 			};
+ 
+-			vdd: buck3 {
++			vdd:buck3{
+ 				regulator-name = "vdd";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+@@ -750,7 +765,7 @@
+ 				regulator-over-current-protection;
+ 			};
+ 
+-			v3v3: buck4 {
++			v3v3:buck4{
+ 				regulator-name = "v3v3";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+@@ -759,25 +774,15 @@
+ 				regulator-initial-mode = <0>;
+ 			};
+ 
+-			v1v8_audio: ldo1 {
+-				regulator-name = "v1v8_audio";
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <1800000>;
+-				regulator-always-on;
+-				interrupts = <IT_CURLIM_LDO1 0>;
+-
+-			};
+-
+-			v3v3_hdmi: ldo2 {
+-				regulator-name = "v3v3_hdmi";
++			v3v3_lcd:ldo2{
++				regulator-name = "v3v3_lcd";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 				interrupts = <IT_CURLIM_LDO2 0>;
+-
+ 			};
+ 
+-			vtt_ddr: ldo3 {
++			vtt_ddr:ldo3{
+ 				regulator-name = "vtt_ddr";
+ 				regulator-min-microvolt = <500000>;
+ 				regulator-max-microvolt = <750000>;
+@@ -785,14 +790,15 @@
+ 				regulator-over-current-protection;
+ 			};
+ 
+-			vdd_usb: ldo4 {
++			vdd_usb:ldo4{
+ 				regulator-name = "vdd_usb";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				interrupts = <IT_CURLIM_LDO4 0>;
++				regulator-always-on;
+ 			};
+ 
+-			vdda: ldo5 {
++			vdda:ldo5{
+ 				regulator-name = "vdda";
+ 				regulator-min-microvolt = <2900000>;
+ 				regulator-max-microvolt = <2900000>;
+@@ -800,39 +806,14 @@
+ 				regulator-boot-on;
+ 			};
+ 
+-			v1v2_hdmi: ldo6 {
+-				regulator-name = "v1v2_hdmi";
+-				regulator-min-microvolt = <1200000>;
+-				regulator-max-microvolt = <1200000>;
+-				regulator-always-on;
+-				interrupts = <IT_CURLIM_LDO6 0>;
+-
+-			};
+-
+-			vref_ddr: vref_ddr {
++			vref_ddr:vref_ddr{
+ 				regulator-name = "vref_ddr";
+ 				regulator-always-on;
+ 				regulator-over-current-protection;
+ 			};
+-
+-			 bst_out: boost {
+-				regulator-name = "bst_out";
+-				interrupts = <IT_OCP_BOOST 0>;
+-			 };
+-
+-			vbus_otg: pwr_sw1 {
+-				regulator-name = "vbus_otg";
+-				interrupts = <IT_OCP_OTG 0>;
+-			 };
+-
+-			 vbus_sw: pwr_sw2 {
+-				regulator-name = "vbus_sw";
+-				interrupts = <IT_OCP_SWOUT 0>;
+-				regulator-active-discharge = <1>;
+-			 };
+ 		};
+ 
+-		onkey {
++		onkey{
+ 			compatible = "st,stpmic1-onkey";
+ 			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 0>;
+ 			interrupt-names = "onkey-falling", "onkey-rising";
+@@ -840,7 +821,7 @@
+ 			status = "okay";
+ 		};
+ 
+-		watchdog {
++		watchdog{
+ 			compatible = "st,stpmic1-wdt";
+ 			status = "disabled";
+ 		};
+@@ -957,6 +938,7 @@
+ &pwr{
+ 	/* USER CODE BEGIN pwr */
+ 	pwr-regulators {
++		status = "okay";
+ 		vdd-supply = <&vdd>;
+ 		vdd_3v3_usbfs-supply = <&vdd_usb>;
+ 	};
+@@ -1006,9 +988,19 @@
+ 	pinctrl-0 = <&sdmmc2_pins_mx>;
+ 	pinctrl-1 = <&sdmmc2_opendrain_pins_mx>;
+ 	pinctrl-2 = <&sdmmc2_sleep_pins_mx>;
+-	status = "disabled";
++	status = "okay";
+ 
+ 	/* USER CODE BEGIN sdmmc2 */
++	non-removable;
++	no-sd;
++	no-sdio;
++	st,neg-edge;
++	bus-width = <8>;
++	vmmc-supply = <&v3v3>;
++	vqmmc-supply = <&vdd>;
++	mmc-ddr-3_3v;
++	no-1-8-v;
++	disable-wp;
+ 	/* USER CODE END sdmmc2 */
+ };
+ 
+@@ -1077,11 +1069,20 @@
+ 	status = "okay";
+ 
+ 	/* USER CODE BEGIN usbh_ohci */
+-	phys = <&usbphyc_port0>;
+-	phy-names = "usb";
++	phys = <&usbphyc_port0>, <&usbphyc_port1 1>;
++	phy-names = "usb", "usb";
+ 	/* USER CODE END usbh_ohci */
+ };
+ 
++&usbh_ehci{
++	status = "okay";
++
++	/* USER CODE BEGIN usbh_ehci */
++	phys = <&usbphyc_port0>, <&usbphyc_port1 1>;
++	phy-names = "usb", "usb";
++	/* USER CODE END usbh_ehci */
++};
++
+ &usbotg_hs{
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&usb_otg_hs_pins_mx>;
+@@ -1089,11 +1090,9 @@
+ 
+ 	/* USER CODE BEGIN usbotg_hs */
+ 	compatible = "st,stm32mp1-hsotg", "snps,dwc2";
+-	dr_mode = "peripheral";
+-	force-b-session-valid;
+ 	phys = <&usbphyc_port1 0>;
+ 	phy-names = "usb2-phy";
+-	vbus-supply = <&vbus_otg>;
++	dr_mode = "peripheral";
+ 	/* USER CODE END usbotg_hs */
+ };
+ 
+@@ -1175,10 +1174,6 @@ memory-region = <&retram>, <&mcuram>, <&mcuram2>, <&vdev0vring0>,
+ 		<&vdev0vring1>, <&vdev0buffer>;
+ };
+ 
+-&adc {
+-	status = "disabled";
+-};
+-
+ &cpu0{
+ 	cpu-supply = <&vddcore>;
+ };
+-- 
+2.29.2
+
