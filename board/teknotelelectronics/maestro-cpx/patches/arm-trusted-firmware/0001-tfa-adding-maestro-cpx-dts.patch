@@ -1,7 +1,7 @@
 From ccf0c301d722328c03ce593a05c96fe5134233fa Mon Sep 17 00:00:00 2001
 From: Mahdi Noori <nekorawesh@gmail.com>
 Date: Fri, 19 Jun 2020 17:00:50 +0300
-Subject: [PATCH 1/5] tfa: adding maestro-cpx dts
+Subject: [PATCH 1/7] tfa: adding maestro-cpx dts
 
 ---
  fdts/maestro-cpx-ddr3-1x4Gb-1066-binG.dtsi | 119 +++++
@@ -727,5 +727,5 @@ index 000000000..76fe2469b
 +/* USER CODE END addons */
 +
 -- 
-2.27.0
+2.29.2
 

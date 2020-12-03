@@ -1,7 +1,7 @@
 From f68ff3239efc05e436a508d40a53301dbc136226 Mon Sep 17 00:00:00 2001
 From: Mahdi Noori <nekorawesh@gmail.com>
 Date: Thu, 3 Dec 2020 18:29:46 +0300
-Subject: [PATCH] fixed pmic
+Subject: [PATCH 7/7] fixed pmic
 
 ---
  fdts/maestro-cpx.dts | 175 ++++++++++++++++++++++++++++---------------

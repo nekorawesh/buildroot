@@ -1,7 +1,7 @@
 From 2edc14f3c792be60b396bd1863a7275aef198e95 Mon Sep 17 00:00:00 2001
 From: Mahdi Noori <nekorawesh@gmail.com>
 Date: Mon, 22 Jun 2020 13:02:49 +0300
-Subject: [PATCH 4/5] tfa: RSVD to ANALOG
+Subject: [PATCH 4/7] tfa: RSVD to ANALOG
 
 ---
  fdts/maestro-cpx.dts | 8 ++++----
@@ -33,5 +33,5 @@ index d310cee98..08121b56d 100755
  };
  
 -- 
-2.27.0
+2.29.2
 

@@ -1,7 +1,7 @@
 From f50ed83184de0e81695ce2f866953498b5df3881 Mon Sep 17 00:00:00 2001
 From: Mahdi Noori <nekorawesh@gmail.com>
 Date: Thu, 3 Dec 2020 18:20:31 +0300
-Subject: [PATCH] usb otg ok, emmc init error
+Subject: [PATCH 8/8] usb otg ok, emmc init error
 
 ---
  arch/arm/boot/dts/maestro-cpx.dts | 117 ++++++++++++++----------------

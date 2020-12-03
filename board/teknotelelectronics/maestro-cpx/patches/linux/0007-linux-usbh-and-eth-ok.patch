@@ -1,30 +1,16 @@
-From 4cd3cad1b83f3f91fcd67d19c73f99fa8973acf7 Mon Sep 17 00:00:00 2001
+From d107bbdd17656576ea056d7c3b14624316b80982 Mon Sep 17 00:00:00 2001
 From: Mahdi Noori <nekorawesh@gmail.com>
-Date: Tue, 4 Aug 2020 15:20:29 +0300
-Subject: [PATCH] uboot: usbh and eth ok
+Date: Tue, 4 Aug 2020 15:17:40 +0300
+Subject: [PATCH 7/8] linux: usbh and eth ok
 
 ---
- arch/arm/dts/maestro-cpx-u-boot.dtsi |  2 +-
- arch/arm/dts/maestro-cpx.dts         | 28 +++++++++++-----------------
- 2 files changed, 12 insertions(+), 18 deletions(-)
+ arch/arm/boot/dts/maestro-cpx.dts | 28 +++++++++++-----------------
+ 1 file changed, 11 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm/dts/maestro-cpx-u-boot.dtsi b/arch/arm/dts/maestro-cpx-u-boot.dtsi
-index ff1f523703..c176e588ec 100755
---- a/arch/arm/dts/maestro-cpx-u-boot.dtsi
-+++ b/arch/arm/dts/maestro-cpx-u-boot.dtsi
-@@ -120,7 +120,7 @@
- 	>;
- 	st,pkcs = <
- 		CLK_CKPER_DISABLED
--		CLK_ETH_PLL4P
-+		CLK_ETH_PLL3Q
- 		CLK_SDMMC12_PLL4P
- 		CLK_DSI_DSIPLL
- 		CLK_STGEN_HSE
-diff --git a/arch/arm/dts/maestro-cpx.dts b/arch/arm/dts/maestro-cpx.dts
-index 9aaad640db..5b105ef7c1 100755
---- a/arch/arm/dts/maestro-cpx.dts
-+++ b/arch/arm/dts/maestro-cpx.dts
+diff --git a/arch/arm/boot/dts/maestro-cpx.dts b/arch/arm/boot/dts/maestro-cpx.dts
+index 9aaad640dbb1..5b105ef7c158 100755
+--- a/arch/arm/boot/dts/maestro-cpx.dts
++++ b/arch/arm/boot/dts/maestro-cpx.dts
 @@ -612,17 +612,20 @@
  	status = "okay";
  
@@ -103,5 +89,5 @@ index 9aaad640db..5b105ef7c1 100755
  	/* USER CODE BEGIN usbphyc_port1 */
  	st,phy-tuning = <&usb_phy_tuning>;
 -- 
-2.28.0
+2.29.2
 

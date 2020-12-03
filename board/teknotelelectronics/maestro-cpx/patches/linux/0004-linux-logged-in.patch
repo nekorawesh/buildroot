@@ -1,7 +1,7 @@
 From d11946a044955331f59f64a032464b71d1b35970 Mon Sep 17 00:00:00 2001
 From: Mahdi Noori <nekorawesh@gmail.com>
 Date: Tue, 23 Jun 2020 14:06:43 +0300
-Subject: [PATCH 4/5] linux: logged in
+Subject: [PATCH 4/8] linux: logged in
 
 ---
  arch/arm/boot/dts/maestro-cpx.dts | 17 ++++++++++-------
@@ -71,5 +71,5 @@ index f40ab29ec89b..9fcfb3b44396 100755
  	/* USER CODE BEGIN sdmmc2 */
  	/* USER CODE END sdmmc2 */
 -- 
-2.27.0
+2.29.2
 

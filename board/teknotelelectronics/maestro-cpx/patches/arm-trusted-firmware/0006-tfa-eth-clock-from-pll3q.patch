@@ -1,7 +1,7 @@
 From 3ed2fde4946b56fcf40a130a99a6805218a9e214 Mon Sep 17 00:00:00 2001
 From: Mahdi Noori <nekorawesh@gmail.com>
 Date: Tue, 4 Aug 2020 15:23:56 +0300
-Subject: [PATCH] tfa: eth clock from pll3q
+Subject: [PATCH 6/7] tfa: eth clock from pll3q
 
 ---
  fdts/maestro-cpx.dts | 2 +-
@@ -21,5 +21,5 @@ index 9a4afd756..05a90e37e 100755
  		CLK_DSI_DSIPLL
  		CLK_STGEN_HSE
 -- 
-2.28.0
+2.29.2
 

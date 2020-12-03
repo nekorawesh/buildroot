@@ -1,7 +1,7 @@
 From 650900cc6329c5f0bc7a39c3ce126cbc5a98dca5 Mon Sep 17 00:00:00 2001
 From: Mahdi Noori <nekorawesh@gmail.com>
 Date: Fri, 19 Jun 2020 17:03:53 +0300
-Subject: [PATCH 1/5] uboot: adding maestro-cpx dts
+Subject: [PATCH 1/8] uboot: adding maestro-cpx dts
 
 ---
  .../dts/maestro-cpx-ddr3-1x4Gb-1066-binG.dtsi |  119 ++
@@ -1541,5 +1541,5 @@ index 0000000000..c291eaca8c
 +/* USER CODE END addons */
 +
 -- 
-2.27.0
+2.29.2
 

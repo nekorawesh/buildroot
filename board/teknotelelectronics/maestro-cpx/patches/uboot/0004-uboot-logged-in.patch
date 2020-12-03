@@ -1,7 +1,7 @@
 From dce2a5fabc6251ad54f5ca59b6a40ae764e15de9 Mon Sep 17 00:00:00 2001
 From: Mahdi Noori <nekorawesh@gmail.com>
 Date: Tue, 23 Jun 2020 14:11:18 +0300
-Subject: [PATCH 4/5] uboot: logged in
+Subject: [PATCH 4/8] uboot: logged in
 
 ---
  arch/arm/dts/maestro-cpx-u-boot.dtsi |  1 -
@@ -84,5 +84,5 @@ index f40ab29ec8..9fcfb3b443 100755
  	/* USER CODE BEGIN sdmmc2 */
  	/* USER CODE END sdmmc2 */
 -- 
-2.27.0
+2.29.2
 

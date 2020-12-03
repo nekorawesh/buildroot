@@ -1,7 +1,7 @@
 From 0315a4cab474cfeb910b2ed75fee7f713870d51d Mon Sep 17 00:00:00 2001
 From: Mahdi Noori <nekorawesh@gmail.com>
 Date: Thu, 25 Jun 2020 12:59:57 +0300
-Subject: [PATCH 5/5] dsi ok
+Subject: [PATCH 5/8] dsi ok
 
 ---
  arch/arm/boot/dts/maestro-cpx.dts | 98 ++++++++++++++++++++++++++-----
@@ -260,5 +260,5 @@ index 9fcfb3b44396..b714cd6ccbd1 100755
  
  		port {
 -- 
-2.27.0
+2.29.2
 
