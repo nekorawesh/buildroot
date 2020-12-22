@@ -1,0 +1,30 @@
+From e736cf9bbd80d0258ec51d01cf08c882e7c87b33 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Tue, 22 Dec 2020 15:10:20 +0300
+Subject: [PATCH] removed sdmmc2 clk redefine
+
+---
+ arch/arm/boot/dts/maestro-cpx.dts | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/arch/arm/boot/dts/maestro-cpx.dts b/arch/arm/boot/dts/maestro-cpx.dts
+index ebac9015de9a..13012558711e 100755
+--- a/arch/arm/boot/dts/maestro-cpx.dts
++++ b/arch/arm/boot/dts/maestro-cpx.dts
+@@ -464,13 +464,6 @@
+ 			drive-push-pull;
+ 			bias-pull-up;
+ 		};
+-		pins2 {
+-			u-boot,dm-spl;
+-			pinmux = <STM32_PINMUX('E', 3, AF9)>; /* SDMMC2_CK */
+-			slew-rate = <2>;
+-			drive-push-pull;
+-			bias-pull-up;
+-		};
+ 	};
+ 
+ 	sdmmc2_d47_sleep_pins_mx: sdmmc2_d47_sleep_mx-0 {
+-- 
+2.29.2
+
