@@ -1,0 +1,29 @@
+From c2de943fd05aef27b7a7a23497d99ae9f15254ea Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Tue, 22 Dec 2020 15:06:49 +0300
+Subject: [PATCH] removed sdmmc2 clk redefine
+
+---
+ fdts/maestro-cpx.dts | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/fdts/maestro-cpx.dts b/fdts/maestro-cpx.dts
+index 796d640db..87a767b11 100755
+--- a/fdts/maestro-cpx.dts
++++ b/fdts/maestro-cpx.dts
+@@ -127,12 +127,6 @@
+ 			drive-push-pull;
+ 			bias-pull-up;
+ 		};
+-		pins2 {
+-			pinmux = <STM32_PINMUX('E', 3, AF9)>; /* SDMMC2_CK */
+-			slew-rate = <1>;
+-			drive-push-pull;
+-			bias-pull-up;
+-		};
+ 	};
+ 
+ 	uart8_pins_mx: uart8_mx-0 {
+-- 
+2.29.2
+
