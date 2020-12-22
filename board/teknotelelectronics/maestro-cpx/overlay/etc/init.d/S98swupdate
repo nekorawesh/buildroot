@@ -3,7 +3,7 @@
 DAEMON="swupdate"
 PIDFILE="/var/run/$DAEMON.pid"
 
-PART_STATUS=$(sgdisk -A 4:get:2 /dev/mmcblk0)
+PART_STATUS=$(sgdisk -A 4:get:2 /dev/mmcblk1)
 if test "${PART_STATUS}" = "4:2:1" ; then
 	ROOTFS=rootfs-2
 else
