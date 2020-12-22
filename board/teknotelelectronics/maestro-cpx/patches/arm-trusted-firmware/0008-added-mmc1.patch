@@ -1,0 +1,102 @@
+From fdc48b9a2b3586d438b92536945188904e1c199e Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Mon, 21 Dec 2020 16:44:49 +0300
+Subject: [PATCH] added mmc1
+
+---
+ fdts/maestro-cpx.dts | 57 ++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 44 insertions(+), 13 deletions(-)
+
+diff --git a/fdts/maestro-cpx.dts b/fdts/maestro-cpx.dts
+index d345d427c..95cd8ba7b 100755
+--- a/fdts/maestro-cpx.dts
++++ b/fdts/maestro-cpx.dts
+@@ -98,26 +98,40 @@
+ 		};
+ 	};
+ 
+-	sdmmc2_pins_mx: sdmmc2_mx-0 {
++	sdmmc2_b4_pins_mx: sdmmc2_b4_mx-0 {
+ 		pins1 {
+-			pinmux = <STM32_PINMUX('A', 8, AF9)>, /* SDMMC2_D4 */
+-					 <STM32_PINMUX('B', 3, AF9)>, /* SDMMC2_D2 */
+-					 <STM32_PINMUX('B', 4, AF9)>, /* SDMMC2_D3 */
+-					 <STM32_PINMUX('B', 9, AF10)>, /* SDMMC2_D5 */
+-					 <STM32_PINMUX('B', 14, AF9)>, /* SDMMC2_D0 */
+-					 <STM32_PINMUX('B', 15, AF9)>, /* SDMMC2_D1 */
+-					 <STM32_PINMUX('C', 7, AF10)>, /* SDMMC2_D7 */
+-					 <STM32_PINMUX('E', 5, AF9)>, /* SDMMC2_D6 */
+-					 <STM32_PINMUX('G', 6, AF10)>; /* SDMMC2_CMD */
++			pinmux = <STM32_PINMUX('B', 14, AF9)>, /* SDMMC2_D0 */
++				<STM32_PINMUX('B', 15, AF9)>, /* SDMMC2_D1 */
++				<STM32_PINMUX('B', 3, AF9)>, /* SDMMC2_D2 */
++				<STM32_PINMUX('B', 4, AF9)>, /* SDMMC2_D3 */
++				<STM32_PINMUX('G', 6, AF10)>; /* SDMMC2_CMD */
++			slew-rate = <1>;
++			drive-push-pull;
+ 			bias-disable;
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('E', 3, AF9)>; /* SDMMC2_CK */
++			slew-rate = <2>;
+ 			drive-push-pull;
++			bias-disable;
++		};
++	};
++
++	sdmmc2_d47_pins_mx: sdmmc2_d47_mx-0 {
++		pins1 {
++			pinmux = <STM32_PINMUX('A', 8, AF9)>, /* SDMMC2_D4 */
++				<STM32_PINMUX('B', 9, AF10)>, /* SDMMC2_D5 */
++				<STM32_PINMUX('E', 5, AF9)>, /* SDMMC2_D6 */
++				<STM32_PINMUX('C', 7, AF10)>; /* SDMMC2_D7 */
+ 			slew-rate = <1>;
++			drive-push-pull;
++			bias-disable;
+ 		};
+ 		pins2 {
+ 			pinmux = <STM32_PINMUX('E', 3, AF9)>; /* SDMMC2_CK */
+-			bias-disable;
++			slew-rate = <1>;
+ 			drive-push-pull;
+-			slew-rate = <3>;
++			bias-disable;
+ 		};
+ 	};
+ 
+@@ -470,7 +484,7 @@
+ 	DECPROT(STM32MP1_ETZPC_VREFBUF_ID, DECPROT_NS_RW, DECPROT_UNLOCK)
+ 	/*"Mcu Isolation" peripherals*/
+ 	DECPROT(STM32MP1_ETZPC_CRC2_ID, DECPROT_MCU_ISOLATION, DECPROT_UNLOCK)
+-	DECPROT(STM32MP1_ETZPC_TT_FDCAN_ID, DECPROT_MCU_ISOLATION, DECPROT_UNLOCK)
++	/*DECPROT(STM32MP1_ETZPC_TT_FDCAN_ID, DECPROT_MCU_ISOLATION, DECPROT_UNLOCK)*/
+ 	DECPROT(STM32MP1_ETZPC_HASH2_ID, DECPROT_MCU_ISOLATION, DECPROT_UNLOCK)
+ 	DECPROT(STM32MP1_ETZPC_I2C2_ID, DECPROT_MCU_ISOLATION, DECPROT_UNLOCK)
+ 	DECPROT(STM32MP1_ETZPC_I2C5_ID, DECPROT_MCU_ISOLATION, DECPROT_UNLOCK)
+@@ -559,6 +573,23 @@
+ 	/* USER CODE END sdmmc1 */
+ };
+ 
++&sdmmc2{
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc2_b4_pins_mx &sdmmc2_d47_pins_mx>;
++	status = "okay";
++
++	/* USER CODE BEGIN sdmmc2 */
++	non-removable;
++	no-sd;
++	no-sdio;
++	st,neg-edge;
++	bus-width = <8>;
++	vmmc-supply = <&v3v3>;
++	vqmmc-supply = <&v3v3>;
++	mmc-ddr-3_3v;
++	/* USER CODE END sdmmc2 */
++};
++
+ &tamp{
+ 	status = "okay";
+ 	secure-status = "okay";
+-- 
+2.29.2
+
