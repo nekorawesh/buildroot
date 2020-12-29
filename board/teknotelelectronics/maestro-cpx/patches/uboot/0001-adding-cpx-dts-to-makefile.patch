@@ -1,0 +1,26 @@
+From 44677c2a0ad5c6c2840bc98fb594f076bed9a31d Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Mon, 28 Dec 2020 18:55:08 +0300
+Subject: [PATCH 1/2] adding cpx dts to makefile
+
+---
+ arch/arm/dts/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
+index c3fd89b8be..3fc4dff8a4 100644
+--- a/arch/arm/dts/Makefile
++++ b/arch/arm/dts/Makefile
+@@ -837,7 +837,8 @@ dtb-$(CONFIG_STM32MP15x) += \
+ 	stm32mp157f-dk2.dtb \
+ 	stm32mp157f-ed1.dtb \
+ 	stm32mp157f-ev1.dtb \
+-	stm32mp15xx-dhcom-pdk2.dtb
++	stm32mp15xx-dhcom-pdk2.dtb \
++	maestro-cpx.dtb
+ 
+ dtb-$(CONFIG_SOC_K3_AM6) += k3-am654-base-board.dtb k3-am654-r5-base-board.dtb
+ dtb-$(CONFIG_SOC_K3_J721E) += k3-j721e-common-proc-board.dtb \
+-- 
+2.29.2
+
