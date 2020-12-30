@@ -13,7 +13,7 @@ atf_image()
 	if grep -Eq "DTB_FILE_NAME=stm32mp157c-dk2.dtb" <<< ${ATF_VARIABLES}; then
 		echo "tf-a-stm32mp157c-dk2.stm32"
 	elif grep -Eq "DTB_FILE_NAME=stm32mp157a-dk1.dtb" <<< ${ATF_VARIABLES}; then
-                echo "tf-a-stm32mp157a-dk1.stm32"
+		echo "tf-a-stm32mp157a-dk1.stm32"
 	fi
 }
 

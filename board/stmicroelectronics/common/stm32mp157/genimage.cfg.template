@@ -5,18 +5,27 @@ image sdcard.img {
 
 	partition fsbl1 {
 		image = "%ATFBIN%"
+		size = 256K
 	}
 
 	partition fsbl2 {
 		image = "%ATFBIN%"
+		size = 256K
 	}
 
 	partition ssbl {
 		image = "u-boot.stm32"
+		size = 2M
 	}
 
 	partition rootfs {
 		image = "rootfs.ext4"
 		bootable = "yes"
+		partition-type = 0x83
+		size = 256M
 	}
+}
+
+config {
+
 }
