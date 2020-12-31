@@ -1,0 +1,64 @@
+From 4d2d759bcfcd47c4cb198d3cac47c66ec34930f3 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Wed, 30 Dec 2020 19:54:15 +0300
+Subject: [PATCH] fixed ddr problem
+
+---
+ fdts/maestro-cpx-ddr3-1x4Gb-1066-binG.dtsi |  6 ++++--
+ fdts/maestro-cpx.dts                       | 10 +++-------
+ 2 files changed, 7 insertions(+), 9 deletions(-)
+
+diff --git a/fdts/maestro-cpx-ddr3-1x4Gb-1066-binG.dtsi b/fdts/maestro-cpx-ddr3-1x4Gb-1066-binG.dtsi
+index d4574e6c1..822c8c890 100755
+--- a/fdts/maestro-cpx-ddr3-1x4Gb-1066-binG.dtsi
++++ b/fdts/maestro-cpx-ddr3-1x4Gb-1066-binG.dtsi
+@@ -103,11 +103,11 @@
+ #define DDR_ZQ0CR1 0x00000038
+ #define DDR_DX0GCR 0x0000CE81
+ #define DDR_DX0DLLCR 0x40000000
+-#define DDR_DX0DQTR 0x33333333
++#define DDR_DX0DQTR 0xFFFFFFFF
+ #define DDR_DX0DQSTR 0x3DB02000
+ #define DDR_DX1GCR 0x0000CE81
+ #define DDR_DX1DLLCR 0x40000000
+-#define DDR_DX1DQTR 0x33333333
++#define DDR_DX1DQTR 0xFFFFFFFF
+ #define DDR_DX1DQSTR 0x3DB02000
+ #define DDR_DX2GCR 0x0000CE80
+ #define DDR_DX2DLLCR 0x40000000
+@@ -117,3 +117,5 @@
+ #define DDR_DX3DLLCR 0x40000000
+ #define DDR_DX3DQTR 0xFFFFFFFF
+ #define DDR_DX3DQSTR 0x3DB02000
++
++#include "stm32mp15-ddr.dtsi"
+diff --git a/fdts/maestro-cpx.dts b/fdts/maestro-cpx.dts
+index 3974ba1ee..c60d990fe 100755
+--- a/fdts/maestro-cpx.dts
++++ b/fdts/maestro-cpx.dts
+@@ -9,19 +9,15 @@
+  */
+ 
+ /dts-v1/;
+-#include "maestro-cpx-ddr3-1x4Gb-1066-binG.dtsi"
+-
+ /* USER CODE BEGIN includes */
+-#include <dt-bindings/power/stm32mp1-power.h>
+-
+-#include <dt-bindings/pinctrl/stm32-pinfunc.h>
+ #include <dt-bindings/clock/stm32mp1-clksrc.h>
+ #include <dt-bindings/soc/st,stm32-etzpc.h>
+-
++#include <dt-bindings/power/stm32mp1-power.h>
++#include <dt-bindings/pinctrl/stm32-pinfunc.h>
+ #include "stm32mp157.dtsi"
+ #include "stm32mp15xa.dtsi"
+ #include "stm32mp15xxab-pinctrl.dtsi"
+-#include "stm32mp15-ddr.dtsi"
++#include "maestro-cpx-ddr3-1x4Gb-1066-binG.dtsi"
+ /* USER CODE END includes */
+ 
+ / {
+-- 
+2.29.2
+
