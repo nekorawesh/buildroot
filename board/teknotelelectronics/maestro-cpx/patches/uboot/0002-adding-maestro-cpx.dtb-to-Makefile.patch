@@ -1,7 +1,7 @@
-From 44677c2a0ad5c6c2840bc98fb594f076bed9a31d Mon Sep 17 00:00:00 2001
+From b47fccee4a5cc698cf71bf66f118d4258633048a Mon Sep 17 00:00:00 2001
 From: Mahdi Noori <nekorawesh@gmail.com>
-Date: Mon, 28 Dec 2020 18:55:08 +0300
-Subject: [PATCH 1/2] adding cpx dts to makefile
+Date: Tue, 5 Jan 2021 18:26:02 +0300
+Subject: [PATCH] adding maestro-cpx.dtb to Makefile
 
 ---
  arch/arm/dts/Makefile | 3 ++-
@@ -22,5 +22,5 @@ index c3fd89b8be..3fc4dff8a4 100644
  dtb-$(CONFIG_SOC_K3_AM6) += k3-am654-base-board.dtb k3-am654-r5-base-board.dtb
  dtb-$(CONFIG_SOC_K3_J721E) += k3-j721e-common-proc-board.dtb \
 -- 
-2.29.2
+2.30.0
 

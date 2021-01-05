@@ -435,7 +435,7 @@ function populate_gpt_partition_table_from_flash_layout() {
 			#debug "   DUMP ip        $ip"
 			#debug "   DUMP offset    $offset "
 			#debug "   DUMP bin2flash $bin2flash"
-			if [ "$selected" == "P" ] || [ "$selected" == "PD" ] || [ "$selected" == "DP" ] || [ "$selected" == "PE" ] || [ "$selected" == "EP" ];
+			if [ "$selected" == "P" ] || [ "$selected" == "PD" ] || [ "$selected" == "DP" ];
 			then
 				# Populate only the partition in "P"
 				if [ -e "${BINARIES_DIR}/$bin2flash" ];
@@ -451,7 +451,7 @@ function populate_gpt_partition_table_from_flash_layout() {
 				fi
 				j=$((j+1))
 			else
-				if [ "$selected" == "E" ];
+				if [ "$selected" == "E" ] || [ "$selected" == "PE" ] || [ "$selected" == "EP" ];
 				then
 					printf "\r[UNFILLED] part %d: %8s, \n" $j "$partName"
 					j=$((j+1))
