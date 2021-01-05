@@ -30,8 +30,8 @@ declare -A FLASHLAYOUT_data
 
 SDCARD_TOKEN=mmc0
 
-# Size of 260MB
-DEFAULT_RAW_SIZE=260
+# Size of 516MB
+DEFAULT_RAW_SIZE=516
 
 # size of 256MB
 DEFAULT_ROOTFS_PARTITION_SIZE=262144
@@ -103,7 +103,7 @@ function read_flash_layout() {
 	debug "Number of line: $FLASHLAYOUT_number_of_line"
 	while read -ra flashlayout_data; do
 		selected=${flashlayout_data[0]}
-		if [ "$selected" == "P" ] || [ "$selected" == "E" ] || [ "$selected" == "PD" ] || [ "$selected" == "DP" ];
+		if [ "$selected" == "P" ] || [ "$selected" == "E" ] || [ "$selected" == "PD" ] || [ "$selected" == "DP" ] || [ "$selected" == "PE" ] || [ "$selected" == "EP" ];
 		then
 			# Selected=
 			FLASHLAYOUT_data[$i,$COL_SELECTED_OPT]=${flashlayout_data[0]}
@@ -151,7 +151,7 @@ function calculate_number_of_partition() {
 		ip=${FLASHLAYOUT_data[$i,$COL_IP]}
 		if [ "$ip" == "$SDCARD_TOKEN" ]
 		then
-			if [ "$selected" == "P" ] || [ "$selected" == "E" ] || [ "$selected" == "PD" ] || [ "$selected" == "DP" ];
+			if [ "$selected" == "P" ] || [ "$selected" == "E" ] || [ "$selected" == "PD" ] || [ "$selected" == "DP" ] || [ "$selected" == "PE" ] || [ "$selected" == "EP" ];
 			then
 				num=$((num+1))
 			fi
@@ -175,7 +175,7 @@ function move_partition_offset() {
 
 		if [ "$ip" == "$SDCARD_TOKEN" ]
 		then
-			if [ "$selected" == "P" ] || [ "$selected" == "E" ] || [ "$selected" == "PD" ] || [ "$selected" == "DP" ];
+			if [ "$selected" == "P" ] || [ "$selected" == "E" ] || [ "$selected" == "PD" ] || [ "$selected" == "DP" ] || [ "$selected" == "PE" ] || [ "$selected" == "EP" ];
 			then
 				#calculate actual size of partition (before update)
 				# in case of last partition, we doesn't take care of tmp_next_offset
@@ -222,7 +222,7 @@ function generate_gpt_partition_table_from_flash_layout() {
 		debug "DUMP Process for $partName partition"
 
 		case "$selected" in
-		P|E|1|PD|DP)
+		P|E|1|PD|DP|PE|EP)
 			# partition are present and must be created
 			;;
 		*)
@@ -269,7 +269,7 @@ function generate_gpt_partition_table_from_flash_layout() {
 			next_offset=${FLASHLAYOUT_data[$((i+1)),$COL_OFFSET]}
 			next_offset=${next_offset//0x/}
 			next_offset_b=$((16#$next_offset))
-			if [ "$partName" == "rootfs1" ];
+			if [ "$partName" == "rootfs1" ] || [ "$partName" == "rootfs2" ];
 			then
 				#force the size of rootfs parition to 768MB
 				new_next_partition_offset_b=$((offset_b + 1024*DEFAULT_ROOTFS_PARTITION_SIZE))
@@ -328,11 +328,11 @@ function generate_gpt_partition_table_from_flash_layout() {
 			debug "   DUMP image size     $image_size"
 			debug "   DUMP partition size $partition_size"
 			debug "   DUMP free size      $free_size "
-			if [ "$selected" == "P" ] || [ "$selected" == "E" ] || [ "$selected" == "PD" ] || [ "$selected" == "DP" ];
+			if [ "$selected" == "P" ] || [ "$selected" == "E" ] || [ "$selected" == "PD" ] || [ "$selected" == "DP" ] || [ "$selected" == "PE" ] || [ "$selected" == "EP" ];
 			then
 				if [ $free_size -lt 0 ];
 				then
-					if [ "$partName" == "rootfs1" ];
+					if [ "$partName" == "rootfs1" ] || [ "$partName" == "rootfs2" ];
 					then
 						echo "[WARNING]: IMAGE TOO BIG [$partName:$bin2flash $image_size B [requested $partition_size B]"
 						echo "[WARNING]: try to move last partition"
@@ -435,7 +435,7 @@ function populate_gpt_partition_table_from_flash_layout() {
 			#debug "   DUMP ip        $ip"
 			#debug "   DUMP offset    $offset "
 			#debug "   DUMP bin2flash $bin2flash"
-			if [ "$selected" == "P" ] || [ "$selected" == "PD" ] || [ "$selected" == "DP" ];
+			if [ "$selected" == "P" ] || [ "$selected" == "PD" ] || [ "$selected" == "DP" ] || [ "$selected" == "PE" ] || [ "$selected" == "EP" ];
 			then
 				# Populate only the partition in "P"
 				if [ -e "${BINARIES_DIR}/$bin2flash" ];
