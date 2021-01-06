@@ -6,7 +6,7 @@ software = {
 			{
 				filename = "rootfs.ext4.gz";
 				compressed = true;
-				device = "/dev/mmcblk0p4";
+				device = "/dev/mmcblk1p2";
 			});
 		}
 		rootfs-2: {
@@ -14,7 +14,7 @@ software = {
 			{
 				filename = "rootfs.ext4.gz";
 				compressed = true;
-				device = "/dev/mmcblk0p5";
+				device = "/dev/mmcblk1p3";
 			});
 		}
 	}
