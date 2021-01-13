@@ -1,0 +1,32 @@
+From acf69f5287c53babb3f6f6d43abc2b5d9c773267 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Wed, 13 Jan 2021 14:39:51 +0300
+Subject: [PATCH] fixed reserved memeory
+
+---
+ arch/arm/boot/dts/maestro-cpx.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/maestro-cpx.dts b/arch/arm/boot/dts/maestro-cpx.dts
+index 4da32ed63cb3..8ae0b15951b9 100755
+--- a/arch/arm/boot/dts/maestro-cpx.dts
++++ b/arch/arm/boot/dts/maestro-cpx.dts
+@@ -52,13 +52,13 @@
+ 
+ 		vdev0vring1: vdev0vring1@10042000 {
+ 			compatible = "shared-dma-pool";
+-			reg = <0x10041000 0x2000>;
++			reg = <0x10042000 0x2000>;
+ 			no-map;
+ 		};
+ 
+ 		vdev0buffer: vdev0buffer@10044000 {
+ 			compatible = "shared-dma-pool";
+-			reg = <0x10042000 0x4000>;
++			reg = <0x10044000 0x4000>;
+ 			no-map;
+ 		};
+ 
+-- 
+2.30.0
+
