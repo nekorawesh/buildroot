@@ -1,0 +1,179 @@
+From 3dd731cef0a33308ff415d012e7e41e178156c04 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Wed, 13 Jan 2021 11:24:55 +0300
+Subject: [PATCH] can & i2c2 to m4
+
+---
+ arch/arm/boot/dts/maestro-cpx.dts | 90 +++++++++++++++----------------
+ 1 file changed, 43 insertions(+), 47 deletions(-)
+
+diff --git a/arch/arm/boot/dts/maestro-cpx.dts b/arch/arm/boot/dts/maestro-cpx.dts
+index 404b8436d9f4..4da32ed63cb3 100755
+--- a/arch/arm/boot/dts/maestro-cpx.dts
++++ b/arch/arm/boot/dts/maestro-cpx.dts
+@@ -46,17 +46,17 @@
+ 
+ 		vdev0vring0: vdev0vring0@10040000 {
+ 			compatible = "shared-dma-pool";
+-			reg = <0x10040000 0x1000>;
++			reg = <0x10040000 0x2000>;
+ 			no-map;
+ 		};
+ 
+-		vdev0vring1: vdev0vring1@10041000 {
++		vdev0vring1: vdev0vring1@10042000 {
+ 			compatible = "shared-dma-pool";
+-			reg = <0x10041000 0x1000>;
++			reg = <0x10041000 0x2000>;
+ 			no-map;
+ 		};
+ 
+-		vdev0buffer: vdev0buffer@10042000 {
++		vdev0buffer: vdev0buffer@10044000 {
+ 			compatible = "shared-dma-pool";
+ 			reg = <0x10042000 0x4000>;
+ 			no-map;
+@@ -83,11 +83,15 @@
+ 
+ 	/* USER CODE BEGIN root */
+ 	aliases {
+-		serial0 = &uart8;
++		serial0 = &usart2;
++		serial1 = &usart3;
++		serial2 = &uart4;
++		serial3 = &uart8;
++		ethernet0 = &ethernet0;
+ 	};
+ 
+ 	chosen {
+-		stdout-path = "serial0:115200n8";
++		stdout-path = "serial3:115200n8";
+ 	};
+ 
+ 	usb_phy_tuning: usb-phy-tuning {
+@@ -202,26 +206,6 @@
+ 		};
+ 	};
+ 
+-	fdcan2_pins_mx: fdcan2_mx-0 {
+-		pins1 {
+-			pinmux = <STM32_PINMUX('B', 5, AF9)>; /* FDCAN2_RX */
+-			bias-disable;
+-		};
+-		pins2 {
+-			pinmux = <STM32_PINMUX('B', 6, AF9)>; /* FDCAN2_TX */
+-			bias-disable;
+-			drive-push-pull;
+-			slew-rate = <0>;
+-		};
+-	};
+-
+-	fdcan2_sleep_pins_mx: fdcan2_sleep_mx-0 {
+-		pins {
+-			pinmux = <STM32_PINMUX('B', 5, ANALOG)>, /* FDCAN2_RX */
+-					 <STM32_PINMUX('B', 6, ANALOG)>; /* FDCAN2_TX */
+-		};
+-	};
+-
+ 	i2c1_pins_mx: i2c1_mx-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('B', 7, AF4)>, /* I2C1_SDA */
+@@ -284,6 +268,20 @@
+ 		};
+ 	};
+ 
++	m4_fdcan2_pins_mx: m4_fdcan2_mx-0 {
++		pins {
++			pinmux = <STM32_PINMUX('B', 5, RSVD)>, /* FDCAN2_RX */
++					 <STM32_PINMUX('B', 6, RSVD)>; /* FDCAN2_TX */
++		};
++	};
++
++	m4_i2c2_pins_mx: m4_i2c2_mx-0 {
++		pins {
++			pinmux = <STM32_PINMUX('D', 7, RSVD)>, /* I2C2_SCL */
++					 <STM32_PINMUX('G', 15, RSVD)>; /* I2C2_SDA */
++		};
++	};
++
+ 	m4_i2c5_pins_mx: m4_i2c5_mx-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('D', 0, RSVD)>, /* I2C5_SDA */
+@@ -798,16 +796,6 @@
+ 	/* USER CODE END i2c1 */
+ };
+ 
+-&i2c2{
+-	pinctrl-names = "default", "sleep";
+-	pinctrl-0 = <&i2c2_pins_mx>;
+-	pinctrl-1 = <&i2c2_sleep_pins_mx>;
+-	status = "okay";
+-
+-	/* USER CODE BEGIN i2c2 */
+-	/* USER CODE END i2c2 */
+-};
+-
+ &i2c4{
+ 	u-boot,dm-pre-reloc;
+ 	pinctrl-names = "default", "sleep";
+@@ -947,7 +935,7 @@
+ };
+ 
+ &iwdg2{
+-	status = "disabled";
++	status = "okay";
+ 
+ 	/* USER CODE BEGIN iwdg2 */
+ 	timeout-sec = <32>;
+@@ -970,16 +958,6 @@
+ 	/* USER CODE END ltdc */
+ };
+ 
+-&m_can2{
+-	pinctrl-names = "default", "sleep";
+-	pinctrl-0 = <&fdcan2_pins_mx>;
+-	pinctrl-1 = <&fdcan2_sleep_pins_mx>;
+-	status = "okay";
+-
+-	/* USER CODE BEGIN m_can2 */
+-	/* USER CODE END m_can2 */
+-};
+-
+ &m4_crc2{
+ 	status = "okay";
+ 
+@@ -1001,6 +979,15 @@
+ 	/* USER CODE END m4_hash2 */
+ };
+ 
++&m4_i2c2{
++	pinctrl-names = "default";
++	pinctrl-0 = <&m4_i2c2_pins_mx>;
++	status = "okay";
++
++	/* USER CODE BEGIN m4_i2c2 */
++	/* USER CODE END m4_i2c2 */
++};
++
+ &m4_i2c5{
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&m4_i2c5_pins_mx>;
+@@ -1019,6 +1006,15 @@
+ 	/* USER CODE END m4_m_can1 */
+ };
+ 
++&m4_m_can2{
++	pinctrl-names = "default";
++	pinctrl-0 = <&m4_fdcan2_pins_mx>;
++	status = "okay";
++
++	/* USER CODE BEGIN m4_m_can2 */
++	/* USER CODE END m4_m_can2 */
++};
++
+ &m4_rng2{
+ 	status = "okay";
+ 
+-- 
+2.30.0
+
