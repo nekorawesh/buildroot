@@ -1,0 +1,9 @@
+config BR2_PACKAGE_HSS
+        bool "hss"
+        depends on BR2_TOOLCHAIN_HAS_THREADS
+        select BR2_PACKAGE_PAHO_MQTT_C
+        select BR2_PACKAGE_CJSON
+        select BR2_PACKAGE_SQLITE
+        select BR2_PACKAGE_REDIS
+        help 
+          This is maestro hss application.
