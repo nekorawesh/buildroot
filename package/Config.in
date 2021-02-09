@@ -298,7 +298,7 @@ comment "Graphic applications"
 	source "package/rrdtool/Config.in"
 	source "package/stellarium/Config.in"
 	source "package/tesseract-ocr/Config.in"
-
+	source "package/qt-system-uptime/Config.in"
 comment "Graphic libraries"
 	source "package/cegui/Config.in"
 	source "package/directfb/Config.in"
