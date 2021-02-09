@@ -1,0 +1,37 @@
+From 68261c40c3aae58f427622d446616518690491ed Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Wed, 13 Jan 2021 19:34:03 +0300
+Subject: [PATCH] fixed aliases
+
+---
+ arch/arm/boot/dts/maestro-cpx.dts | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/boot/dts/maestro-cpx.dts b/arch/arm/boot/dts/maestro-cpx.dts
+index 8ae0b15951b9..986437b5dc54 100755
+--- a/arch/arm/boot/dts/maestro-cpx.dts
++++ b/arch/arm/boot/dts/maestro-cpx.dts
+@@ -83,15 +83,15 @@
+ 
+ 	/* USER CODE BEGIN root */
+ 	aliases {
+-		serial0 = &usart2;
+-		serial1 = &usart3;
+-		serial2 = &uart4;
+-		serial3 = &uart8;
++		serial0 = &uart8;
++		serial1 = &uart4;
++		serial2 = &usart2;
++		serial3 = &usart3;
+ 		ethernet0 = &ethernet0;
+ 	};
+ 
+ 	chosen {
+-		stdout-path = "serial3:115200n8";
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	usb_phy_tuning: usb-phy-tuning {
+-- 
+2.30.0
+
