@@ -11,7 +11,7 @@ CJSON_INSTALL_STAGING = YES
 HSS_DEPENDENCIES = paho-mqtt-c cjson 
 
 define HSS_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/hss $(TARGET_DIR)/usr/bin/hss
+	$(INSTALL) -D -m 0755 $(@D)/hss $(TARGET_DIR)/usr/local/cpx/bin/hss
 
 endef
 
