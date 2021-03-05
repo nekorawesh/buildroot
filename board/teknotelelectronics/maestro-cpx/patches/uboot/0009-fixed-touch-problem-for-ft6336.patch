@@ -1,0 +1,25 @@
+From dca9a8643b25601dafe462fff60fbc783debfa8e Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Fri, 5 Mar 2021 15:52:08 +0300
+Subject: [PATCH] fixed touch problem for ft6336
+
+---
+ arch/arm/dts/maestro-cpx.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/dts/maestro-cpx.dts b/arch/arm/dts/maestro-cpx.dts
+index 7bb0e44573..164913b34a 100755
+--- a/arch/arm/dts/maestro-cpx.dts
++++ b/arch/arm/dts/maestro-cpx.dts
+@@ -781,7 +781,7 @@
+ 	};
+ 
+ 	touchscreen@38 {
+-		compatible = "focaltech,ft6336";
++		compatible = "focaltech,ft6236";
+ 		reg = <0x38>;
+ 		interrupts = <9 2>;
+ 		interrupt-parent = <&gpioa>;
+-- 
+2.30.1
+
