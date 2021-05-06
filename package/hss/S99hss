@@ -10,7 +10,7 @@ USER_LOCAL_DIR="/usr/local/cpx"
 USER_LOCAL_BIN_DIR=$USER_LOCAL_DIR/bin
 USER_LOCAL_FW_DIR=$USER_LOCAL_DIR$FIRMWARE_DIR
 FIRMWARE_NAME=$(basename $USER_LOCAL_FW_DIR/*)
-RPROC_STATE=`tr -d '\0' < $RPROC_CLASS_DIR/state`
+RPROC_STATE=$(tr -d '\0' <$RPROC_CLASS_DIR/state)
 
 CONFIG_FS_DIR=/sys/kernel/config
 GADGET_DIR=$CONFIG_FS_DIR/usb_gadget
@@ -32,74 +32,69 @@ GADGET_DEV_DIR=$GADGET_DIR/custom_hid
 : ${USB_FUNCTION:=hid.usb}
 
 start_m4() {
-	if [ $RPROC_STATE == "running" ]
-	then
-		echo "Stopping running fw ..."
-		echo stop > $RPROC_CLASS_DIR/state
+	if [ $RPROC_STATE == "running" ]; then
+		echo "M4 fw already running ..."
+	else
+		if [ ! -d $FIRMWARE_DIR ]; then
+			echo "Create $FIRMWARE_DIR directory"
+			mkdir $FIRMWARE_DIR
+		fi
+
+		cp $USER_LOCAL_FW_DIR/$FIRMWARE_NAME $FIRMWARE_DIR/
+
+		echo $FIRMWARE_NAME >$RPROC_CLASS_DIR/firmware
+		echo start >$RPROC_CLASS_DIR/state
+
 	fi
-
-	if [ ! -d $FIRMWARE_DIR ]
-	then
-		echo "Create $FIRMWARE_DIR directory"
-		mkdir $FIRMWARE_DIR
-	fi
-
-	cp $USER_LOCAL_FW_DIR/$FIRMWARE_NAME $FIRMWARE_DIR/
-
-	echo $FIRMWARE_NAME > $RPROC_CLASS_DIR/firmware
-	echo start > $RPROC_CLASS_DIR/state
 }
 
 stop_m4() {
-	if [ $RPROC_STATE == "offline" ]
-	then
-	echo "Nothing to do, no M4 fw is running"
+	if [ $RPROC_STATE == "offline" ]; then
+		echo "Nothing to do, no M4 fw is running"
 
 	else
-	echo stop > $RPROC_CLASS_DIR/state
+		echo stop >$RPROC_CLASS_DIR/state
 
 	fi
 }
 
 add_usb_gadget() {
-	if [ ! -d $GADGET_DEV_DIR ]
-	then
+	if [ ! -d $GADGET_DEV_DIR ]; then
 		echo "Creating USB gadget custom_hid"
 		mount -t configfs none $CONFIG_FS_DIR
 
 		mkdir -p $GADGET_DEV_DIR
-	
-		echo $USB_IDVENDOR > $GADGET_DEV_DIR/idVendor
-		echo $USB_IDPRODUCT > $GADGET_DEV_DIR/idProduct
-		echo $USB_BCDDEVICE > $GADGET_DEV_DIR/bcdDevice
-		echo $USB_BCDUSB > $GADGET_DEV_DIR/bcdUSB
-		
+
+		echo $USB_IDVENDOR >$GADGET_DEV_DIR/idVendor
+		echo $USB_IDPRODUCT >$GADGET_DEV_DIR/idProduct
+		echo $USB_BCDDEVICE >$GADGET_DEV_DIR/bcdDevice
+		echo $USB_BCDUSB >$GADGET_DEV_DIR/bcdUSB
+
 		mkdir -p $GADGET_DEV_DIR/strings/0x409
-		echo "$USB_SERIALNUMBER" > $GADGET_DEV_DIR/strings/0x409/serialnumber
-		echo "$USB_MANUFACTURER" > $GADGET_DEV_DIR/strings/0x409/manufacturer
-		echo "$USB_PRODUCT" > $GADGET_DEV_DIR/strings/0x409/product
-		
+		echo "$USB_SERIALNUMBER" >$GADGET_DEV_DIR/strings/0x409/serialnumber
+		echo "$USB_MANUFACTURER" >$GADGET_DEV_DIR/strings/0x409/manufacturer
+		echo "$USB_PRODUCT" >$GADGET_DEV_DIR/strings/0x409/product
+
 		mkdir -p $GADGET_DEV_DIR/configs/$USB_CONFIG
-		echo $USB_MAXPOWER > $GADGET_DEV_DIR/configs/$USB_CONFIG/MaxPower
+		echo $USB_MAXPOWER >$GADGET_DEV_DIR/configs/$USB_CONFIG/MaxPower
 
 		echo "Adding function $USB_FUNCTION to USB gadget custom_hid"
 		mkdir -p $GADGET_DEV_DIR/functions/$USB_FUNCTION
-		echo $USB_PROTOCOL > $GADGET_DEV_DIR/functions/$USB_FUNCTION/protocol
-		echo $USB_SUBCLASS > $GADGET_DEV_DIR/functions/$USB_FUNCTION/subclass
-		echo $USB_REPORT_LEN > $GADGET_DEV_DIR/functions/$USB_FUNCTION/report_length
-		echo -ne $USB_REPORT_DESC > $GADGET_DEV_DIR/functions/$USB_FUNCTION/report_desc
+		echo $USB_PROTOCOL >$GADGET_DEV_DIR/functions/$USB_FUNCTION/protocol
+		echo $USB_SUBCLASS >$GADGET_DEV_DIR/functions/$USB_FUNCTION/subclass
+		echo $USB_REPORT_LEN >$GADGET_DEV_DIR/functions/$USB_FUNCTION/report_length
+		echo -ne $USB_REPORT_DESC >$GADGET_DEV_DIR/functions/$USB_FUNCTION/report_desc
 		ln -s $GADGET_DEV_DIR/functions/$USB_FUNCTION $GADGET_DEV_DIR/configs/$USB_CONFIG
-		
-		ls /sys/class/udc/ > $GADGET_DEV_DIR/UDC
+
+		ls /sys/class/udc/ >$GADGET_DEV_DIR/UDC
 	else
 		echo "Gadget already configured."
 	fi
 }
 
 remove_usb_gadget() {
-	if [ -d $GADGET_DIR ] 
-	then
-		echo '' > $GADGET_DEV_DIR/UDC
+	if [ -d $GADGET_DIR ]; then
+		echo '' >$GADGET_DEV_DIR/UDC
 
 		for dir in $GADGET_DEV_DIR/configs/*/strings/*; do
 			[ -d $dir ] && rmdir $dir
@@ -125,7 +120,7 @@ remove_usb_gadget() {
 
 		umount $CONFIG_FS_DIR
 	else
-		echo "No configfs gadget found" 
+		echo "No configfs gadget found"
 	fi
 }
 
@@ -137,13 +132,15 @@ start() {
 	status=$?
 	if [ "$status" -eq 0 ]; then
 		echo "OK"
+	elif [ "$status" -eq 1 ]; then
+		echo "Already OK"
 	else
 		echo "FAIL"
 	fi
 	return "$status"
 }
 
-stop () {
+stop() {
 	printf 'Stopping %s: ' "$DAEMON"
 	start-stop-daemon -K -q -p "$PIDFILE"
 	status=$?
@@ -160,19 +157,22 @@ stop () {
 	return "$status"
 }
 
-restart () {
+restart() {
 	stop
 	sleep 1
 	start
 }
 
 case "$1" in
-        start|stop|restart)
-		"$1";;
-	reload)
-		# Restart, since there is no true "reload" feature.
-		restart;;
-        *)
-                echo "Usage: $0 {start|stop|restart|reload}"
-                exit 1
+start | stop | restart)
+	"$1"
+	;;
+reload)
+	# Restart, since there is no true "reload" feature.
+	restart
+	;;
+*)
+	echo "Usage: $0 {start|stop|restart|reload}"
+	exit 1
+	;;
 esac

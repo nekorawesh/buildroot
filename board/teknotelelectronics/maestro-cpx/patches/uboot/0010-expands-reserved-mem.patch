@@ -1,0 +1,65 @@
+From 235de4a8d9c84232172912d4d3e2dad819229a1a Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Thu, 6 May 2021 12:10:15 +0300
+Subject: [PATCH] expands reserved mem
+
+---
+ arch/arm/dts/maestro-cpx.dts | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/dts/maestro-cpx.dts b/arch/arm/dts/maestro-cpx.dts
+index 164913b34a..7a415d769a 100755
+--- a/arch/arm/dts/maestro-cpx.dts
++++ b/arch/arm/dts/maestro-cpx.dts
+@@ -40,31 +40,31 @@
+ 		/* USER CODE BEGIN reserved-memory */
+ 		mcuram2: mcuram2@10000000 {
+ 			compatible = "shared-dma-pool";
+-			reg = <0x10000000 0x40000>;
++			reg = <0x10000000 0x50000>;
+ 			no-map;
+ 		};
+ 
+-		vdev0vring0: vdev0vring0@10040000 {
++		vdev0vring0: vdev0vring0@10050000 {
+ 			compatible = "shared-dma-pool";
+-			reg = <0x10040000 0x2000>;
++			reg = <0x10050000 0x2000>;
+ 			no-map;
+ 		};
+ 
+-		vdev0vring1: vdev0vring1@10042000 {
++		vdev0vring1: vdev0vring1@10052000 {
+ 			compatible = "shared-dma-pool";
+-			reg = <0x10042000 0x2000>;
++			reg = <0x10052000 0x2000>;
+ 			no-map;
+ 		};
+ 
+-		vdev0buffer: vdev0buffer@10044000 {
++		vdev0buffer: vdev0buffer@10054000 {
+ 			compatible = "shared-dma-pool";
+-			reg = <0x10044000 0x4000>;
++			reg = <0x10054000 0x4000>;
+ 			no-map;
+ 		};
+ 
+ 		mcuram: mcuram@30000000 {
+ 			compatible = "shared-dma-pool";
+-			reg = <0x30000000 0x40000>;
++			reg = <0x30000000 0x50000>;
+ 			no-map;
+ 		};
+ 
+@@ -1249,7 +1249,7 @@
+ 
+ &sram {
+ 	dma_pool: dma_pool@0 {
+-		reg = <0x50000 0x10000>;
++		reg = <0x58000 0x8000>;
+ 		pool;
+ 	};
+ };
+-- 
+2.31.1
+
