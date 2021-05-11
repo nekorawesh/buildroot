@@ -4,6 +4,14 @@ NET_INTERFACE="eth0"
 SERVICES_INIT_DIR="/etc/init.d"
 NET_INIT_SCRIPT="S40network"
 
+MQTT_HOST="localhost"
+MQTT_TOPIC="maestro/hss/heartbeat"
+declare -r MQTT_MAX_TRY=5
+declare -i MQTT_MAX_WAIT=10
+declare -i MQTT_ERR_CNTR=0
+
+MQTT_MAX_WAIT=$((MQTT_MAX_TRY * 2))
+
 declare -A SERVICES
 
 SERVICES["watchdog"]="S15watchdog"
@@ -58,6 +66,40 @@ checkServices() {
     done
 }
 
+startHSS() {
+    HSS_INIT_SCRIPT="$SERVICES_INIT_DIR/${SERVICES["hss"]}"
+    if [ -f "$HSS_INIT_SCRIPT" ]; then
+        $HSS_INIT_SCRIPT start
+    else
+        echo "hss init script not found!"
+    fi
+}
+
+checkHSS() {
+    echo "Checking hss app..."
+    (MQTT_ERR_CNTR=0)
+    for ((c = 0; c < $MQTT_MAX_TRY; c++)); do
+        output=$(mosquitto_sub -h $MQTT_HOST -t $MQTT_TOPIC -C $MQTT_MAX_TRY -W $MQTT_MAX_WAIT | jq '.values.second' || exit 1)
+
+        if [ -z "$output" ]; then
+            ((MQTT_ERR_CNTR=MQTT_ERR_CNTR + 1))
+        else
+            for i in $(echo $output | tr " " "\n"); do
+                if [[ $i < 0 || $i > 59 ]]; then
+                    ((MQTT_ERR_CNTR=MQTT_ERR_CNTR + 1))
+                else
+                    (MQTT_ERR_CNTR=0)
+                fi
+            done
+        fi
+    done
+
+    if [[ $MQTT_ERR_CNTR -ge $MQTT_MAX_TRY ]]; then
+        (MQTT_ERR_CNTR=0)
+        startHSS
+    fi
+}
+
 maintain() {
     checkNetwork
     sleep 1
@@ -72,11 +114,11 @@ syncTime() {
 }
 
 case "$1" in
-maintain | syncTime)
+maintain | syncTime | checkHSS)
     "$1"
     ;;
 *)
-    echo "Usage: $0 {maintain|syncTime}"
+    echo "Usage: $0 {maintain|checkHSS|syncTime}"
     exit 1
     ;;
 esac

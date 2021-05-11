@@ -4,5 +4,8 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 #Maintain user services and apps every minute
 * * * * * /usr/local/cpx/scripts/maintain.sh maintain
 
+#Check hss app every 10 minutes
+*/10 * * * * /usr/local/cpx/scripts/maintain.sh checkHSS
+
 #Synchronize the hardware clock at 03:00
 00 03 * * * /usr/local/cpx/scripts/maintain.sh syncTime
