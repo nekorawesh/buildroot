@@ -1,8 +1,8 @@
 SHELL=/bin/bash
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
-#Set the hardware clock
-00 03 * * * /sbin/hwclock --systohc
+#Maintain user services and apps every minute
+* * * * * /usr/local/cpx/scripts/maintain.sh maintain
 
-#Maintain user services and apps
-* * * * * /usr/local/cpx/scripts/maintain.sh
+#Synchronize the hardware clock at 03:00
+00 03 * * * /usr/local/cpx/scripts/maintain.sh syncTime
