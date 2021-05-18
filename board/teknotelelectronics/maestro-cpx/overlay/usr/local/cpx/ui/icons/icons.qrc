@@ -1,0 +1,38 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>green_icon.png</file>
+    <file>teknotel_iconjpg.jpg</file>
+    <file>red_icon.png</file>
+    <file>teknotel_icon2.png</file>
+    <file>menu_bar_icon3.png</file>
+    <file>menu_bar_icon2.png</file>
+    <file>menu_bar_icon.png</file>
+    <file>menu_icon1.jpeg</file>
+    <file>menu_icon2.jpeg</file>
+    <file>menu_icon3.jpeg</file>
+    <file>menu_icon4.jpeg</file>
+    <file>menu_icon5.jpeg</file>
+    <file>menu_icon6.jpeg</file>
+    <file>settings_icon1.jpeg</file>
+    <file>settings_icon2.jpeg</file>
+    <file>settings_icon3.jpeg</file>
+    <file>settings_icon4.jpeg</file>
+    <file>settings_icon5.jpeg</file>
+    <file>settings_icon6.jpeg</file>
+    <file>settings_icon7.jpeg</file>
+    <file>settings_icon8.jpeg</file>
+    <file>settings_icon9.jpeg</file>
+    <file>settings_icon10.jpeg</file>
+    <file>settings_icon11.jpeg</file>
+    <file>settings_icon12.jpeg</file>
+    <file>WhatsApp Image 2021-01-18 at 09.57.30 (1).jpeg</file>
+    <file>WhatsApp Image 2021-01-18 at 09.57.30 (2).jpeg</file>
+    <file>WhatsApp Image 2021-01-18 at 09.57.30 (3).jpeg</file>
+    <file>WhatsApp Image 2021-01-18 at 09.57.30.jpeg</file>
+    <file>WhatsApp Image 2021-01-18 at 09.57.31 (1).jpeg</file>
+    <file>WhatsApp Image 2021-01-18 at 09.57.31 (2).jpeg</file>
+    <file>WhatsApp Image 2021-01-18 at 09.57.31 (3).jpeg</file>
+    <file>WhatsApp Image 2021-01-18 at 09.57.31.jpeg</file>
+    <file>WhatsApp Image 2021-01-18 at 09.57.32.jpeg</file>
+  </qresource>
+</RCC>

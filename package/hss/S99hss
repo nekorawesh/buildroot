@@ -1,8 +1,12 @@
 #!/bin/sh
 
-DAEMON="hss"
-DAEMON_ARGS=""
-PIDFILE="/var/run/hss.pid"
+HSS_DAEMON="hss"
+HSS_DAEMON_ARGS=""
+HSS_PIDFILE="/var/run/hss.pid"
+
+UI_DAEMON="/usr/local/cpx/scripts/start_ui.sh"
+UI_DAEMON_ARGS=""
+UI_PIDFILE="/var/run/ui.pid"
 
 RPROC_CLASS_DIR="/sys/class/remoteproc/remoteproc0/"
 FIRMWARE_DIR="/lib/firmware"
@@ -12,7 +16,7 @@ USER_LOCAL_FW_DIR=$USER_LOCAL_DIR$FIRMWARE_DIR
 FIRMWARE_NAME=$(basename $USER_LOCAL_FW_DIR/*)
 RPROC_STATE=$(tr -d '\0' <$RPROC_CLASS_DIR/state)
 
-CONFIG_FS_DIR=/sys/kernel/config
+CONFIG_FS_DIR="/sys/kernel/config"
 GADGET_DIR=$CONFIG_FS_DIR/usb_gadget
 GADGET_DEV_DIR=$GADGET_DIR/custom_hid
 
@@ -124,16 +128,44 @@ remove_usb_gadget() {
 	fi
 }
 
-start() {
-	printf 'Starting %s: ' "$DAEMON"
-	start_m4
-	add_usb_gadget
-	start-stop-daemon -b -m -S -q -p "$PIDFILE" -x "$USER_LOCAL_BIN_DIR/$DAEMON" -- $DAEMON_ARGS
+start_UI() {
+	printf 'Starting %s: ' "$UI_DAEMON"
+	start-stop-daemon -b -m -S -q -p "$UI_PIDFILE" -x "$UI_DAEMON" -- $UI_DAEMON_ARGS
 	status=$?
 	if [ "$status" -eq 0 ]; then
 		echo "OK"
-	elif [ "$status" -eq 1 ]; then
-		echo "Already OK"
+	else
+		echo "FAIL"
+	fi
+    
+	return "$status"
+}
+
+stop_UI() {
+	printf 'Stopping %s: ' "$UI_DAEMON"
+	rm -f "$UI_PIDFILE"
+    UI_PID=$(ps x | grep "python gui.py" | grep -v "grep" | awk '{print $1}')
+    kill -9 $UI_PID
+	status=$?
+	if [ "$status" -eq 0 ]; then
+		echo "OK"
+	else
+		echo "FAIL"
+	fi
+
+    
+	return "$status"
+}
+
+start() {
+	printf 'Starting %s: ' "$HSS_DAEMON"
+	start_m4
+	add_usb_gadget
+	start-stop-daemon -b -m -S -q -p "$HSS_PIDFILE" -x "$USER_LOCAL_BIN_DIR/$HSS_DAEMON" -- $HSS_DAEMON_ARGS
+	status=$?
+	if [ "$status" -eq 0 ] || [ "$status" -eq 1 ]; then
+		start_UI
+		echo "OK"
 	else
 		echo "FAIL"
 	fi
@@ -141,11 +173,12 @@ start() {
 }
 
 stop() {
-	printf 'Stopping %s: ' "$DAEMON"
-	start-stop-daemon -K -q -p "$PIDFILE"
+	printf 'Stopping %s: ' "$HSS_DAEMON"
+	stop_UI
+	start-stop-daemon -K -q -p "$HSS_PIDFILE"
 	status=$?
 	if [ "$status" -eq 0 ]; then
-		rm -f "$PIDFILE"
+		rm -f "$HSS_PIDFILE"
 		echo "OK"
 	else
 		echo "FAIL"
