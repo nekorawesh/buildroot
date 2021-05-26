@@ -71,8 +71,8 @@ class StepInfo(Enum):
 
 
 class Language(Enum):
-    English = 0
-    Turkish = 1
+    Turkish = 0
+    English = 1
 
 
 class Events(Enum):
@@ -240,9 +240,9 @@ class SignalSequence:
 
 selected_sequence = [""]
 """
-signal_sequence = {"1": [SignalSequence([1, 2, 4, 3] + 28 * [0], 20),
-                         SignalSequence([2, 4, 3, 1] + 28 * [0], 15),
-                         SignalSequence([4, 3, 1, 2] + 28 * [0], 10)],
+signal_sequence = {"1": [SignalSequence([[1, 0, 0], [1, 1, 0], [1, 1, 0]] + 28 * [0], 20),
+                         SignalSequence([[0, 0, 0], [0, 1, 0], [0, 0, 0]] + 28 * [0], 15),
+                         SignalSequence([[1, 0, 0], [1, 0, 0], [1, 0, 0]] + 28 * [0], 10)],
 
                    "2": [SignalSequence([4, 3, 3, 1] + 28 * [0], 12),
                          SignalSequence([3, 2, 4, 1] + 28 * [0], 17),
@@ -262,6 +262,11 @@ signal_sequence = {"1": [SignalSequence([1, 2, 4, 3] + 28 * [0], 20),
                    "3 -> 1": [SignalSequence([1, 4, 3, 4] + 28 * [0], 18)]
                    }
 """
+
+light_flash_periods = [50, 100, 200, 400]
+light_index_count = [0]
+light_index = {0: [0, 0, 0]}
+
 seq_length = [0]
 seq_count = {}
 signal_sequence = {}
@@ -556,6 +561,57 @@ SignalingModesStr = \
         ["-", "Normal", "Flash", "-", "-", "-", "-", "-", "-", "-", "Emergency State Dark", "Emergency State Flash",
          "-", "-"]
     ]
+
+ErrorStrings = \
+    [
+        [
+            "GECERSiZ PROGRAM",
+            "GEÇERSİZ SİNYAL",
+            "SİNYAL SIRA HATASI",
+            "SON KIRM. LAMBA AR.",
+            "B. SAY. KIR. L. AR.",
+            "SARI-SARI ÇAKIŞMASI",
+            "SARI-YEŞİL ÇAKIŞM.",
+            "YEŞİL-YEŞİL ÇAKIŞM.",
+            "MODÜL YOK",
+            "DÜŞÜK FREKANS SEV.",
+            "YÜKSEK FREKANS SEV.",
+            "DÜŞÜK GERiLiM SEV.",
+            "YÜKSEK GERiLiM SEV.",
+            "LAMBA SAY. DEĞİŞİMi",
+            "MP CHECKSUM HATASI",
+            "MP ALIM HATASI",
+            "CP ZAMAN AŞIMI"
+        ],
+        [
+            "INVALID PROGRAM",
+            "INVALID SIGNAL",
+            "INVALID SIGNAL SEQUENCE",
+            "LAST RED LAMP FAILURE",
+            "NUMBER OF RED LAMPS FAILURE",
+            "YELLOW-YELLOW CONFLICT",
+            "YELLOW-GREEN CONFLICT",
+            "GREEN-GREEN CONFLICT",
+            "MODULE MISSING",
+            "FREQUENCY VALUE LOWER BOUND",
+            "FREQUENCY VALUE UPPER BOUND",
+            "VOLTAGE VALUE LOWER BOUND",
+            "VOLTAGE VALUE UPPER BOUND",
+            "WORKING LAMP TOTAL CHANGE",
+            "MP CHECKSUM ERROR",
+            "MP RECEIVE ERROR",
+            "CP TIMEOUT"
+        ]
+    ]
+
+
+class MCS_User_Request(Enum):
+    NONE = 0
+    ALL_RED = 1  # request to assign red to all signal groups
+    DARK = 2  # request to assign dark to all signal groups
+    FLASH = 3  # request to assign flash signals to all signal groups
+    RETURN = 4  # request to return from user determined states to work schedule examination
+
 
 scroll_bar_stylesheet = """QScrollBar:vertical {
 	border: 2px solid;

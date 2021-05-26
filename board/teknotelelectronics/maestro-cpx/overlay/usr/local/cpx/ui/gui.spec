@@ -1,11 +1,10 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-
 block_cipher = None
 
 
 a = Analysis(['gui.py'],
-             pathex=['/home/noori/Workspace/ui'],
+             pathex=['/mnt/c/Users/borag/Desktop/Arayuz_embed_UP_Evo'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -31,4 +30,4 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=False )
+          console=True )

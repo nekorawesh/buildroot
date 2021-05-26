@@ -24,6 +24,8 @@ class MQTTSubTopics(Enum):
 	lastLogIndex = "maestro/hss/lastLogIndex"
 	gateStateLog = "maestro/hss/gateStateLog"
 	state = "maestro/hss/state"
+	nsiRequest = "maestro/hss/nsiRequest"
+	sinRequest = "maestro/hss/sinRequest"
 	phaseCount = "maestro/hss/phaseCount"
 	stepCount = "maestro/hss/stepCount"
 	stepInfo = "maestro/hss/stepInfo"
@@ -41,9 +43,13 @@ class MQTTPubTopics(Enum):
 	gprsSetting = "maestro/mmi/gprsSetting"
 	logInfo = "maestro/mmi/logInfo"
 	startInputDemands = "maestro/mmi/startInputDemands"
+	nsiRequest = "maestro/mmi/nsiRequest"
+	sinRequest = "maestro/mmi/sinRequest"
 	phaseCount = "maestro/mmi/phaseCount"
 	stepCount = "maestro/mmi/stepCount"
 	stepInfo = "maestro/mmi/stepInfo"
+	stepEdit = "maestro/mmi/stepEdit"
+	userStateRequest = "maestro/mmi/userStateRequest"
 
 
 class SubThread(QThread):
@@ -59,6 +65,8 @@ class SubThread(QThread):
 	signal_userSettings = pyqtSignal(dict)
 	signal_lastLogIndex = pyqtSignal(dict)
 	signal_gateStateLog = pyqtSignal(dict)
+	signal_nsiRequest = pyqtSignal(dict)
+	signal_sinRequest = pyqtSignal(dict)
 	signal_phaseCount = pyqtSignal(dict)
 	signal_stepCount = pyqtSignal(dict)
 	signal_stepInfo = pyqtSignal(dict)
@@ -119,6 +127,10 @@ class SubThread(QThread):
 			self.signal_gateStateLog.emit(data)
 		elif msg.topic == MQTTSubTopics.state.value:
 			self.signal_State.emit(data)
+		elif msg.topic == MQTTSubTopics.nsiRequest.value:
+			self.signal_nsiRequest.emit(data)
+		elif msg.topic == MQTTSubTopics.sinRequest.value:
+			self.signal_sinRequest.emit(data)
 		elif msg.topic == MQTTSubTopics.phaseCount.value:
 			self.signal_phaseCount.emit(data)
 		elif msg.topic == MQTTSubTopics.stepCount.value:

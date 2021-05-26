@@ -209,7 +209,7 @@
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_19" stretch="1,3,0">
+            <layout class="QVBoxLayout" name="verticalLayout_19" stretch="1,3,0,0,0">
              <property name="spacing">
               <number>0</number>
              </property>
@@ -326,6 +326,30 @@ This is a paragrahp&lt;br&gt;
               </widget>
              </item>
              <item>
+              <spacer name="verticalSpacer_38">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>10</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QLabel" name="error_msg_label">
+               <property name="styleSheet">
+                <string notr="true">color: rgb(23, 87, 141);
+</string>
+               </property>
+               <property name="text">
+                <string notr="true"/>
+               </property>
+              </widget>
+             </item>
+             <item>
               <spacer name="verticalSpacer_36">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -333,7 +357,7 @@ This is a paragrahp&lt;br&gt;
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>20</width>
-                 <height>40</height>
+                 <height>10</height>
                 </size>
                </property>
               </spacer>
@@ -832,6 +856,119 @@ border-color: rgb(185, 0, 0);</string>
              <property name="lineWidth">
               <number>0</number>
              </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_13">
+              <item>
+               <widget class="QPushButton" name="flash_button">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+	background-color: rgb(23, 87, 141);
+	color: rgb(255, 255, 255);
+	border-radius: 10px;
+}
+
+QPushButton:hover {
+	background-color: rgb(29, 115, 185);
+}
+
+QPushButton:pressed {
+	background-color: rgb(35, 135, 217);
+	color: rgb(0, 0, 0);
+}
+
+QPushButton:checked {
+	background-color: red; 
+}</string>
+                </property>
+                <property name="text">
+                 <string>Flaş</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="all_red_button">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+	background-color: rgb(23, 87, 141);
+	color: rgb(255, 255, 255);
+	border-radius: 10px;
+}
+
+QPushButton:hover {
+	background-color: rgb(29, 115, 185);
+}
+
+QPushButton:pressed {
+	background-color: rgb(35, 135, 217);
+	color: rgb(0, 0, 0);
+}
+
+QPushButton:checked {
+	background-color: red; 
+}</string>
+                </property>
+                <property name="text">
+                 <string>Hepsi Kırmızı</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="dark_button">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+	background-color: rgb(23, 87, 141);
+	color: rgb(255, 255, 255);
+	border-radius: 10px;
+}
+
+QPushButton:hover {
+	background-color: rgb(29, 115, 185);
+}
+
+QPushButton:pressed {
+	background-color: rgb(35, 135, 217);
+	color: rgb(0, 0, 0);
+}
+
+QPushButton:checked {
+	background-color: red; 
+}</string>
+                </property>
+                <property name="text">
+                 <string>Karanlık</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
            <item row="2" column="2">
@@ -2881,8 +3018,8 @@ QScrollBar::sub-line:vertical {
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>790</width>
-                        <height>279</height>
+                        <width>117</width>
+                        <height>84</height>
                        </rect>
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -5226,8 +5363,8 @@ QScrollBar::sub-line:vertical {
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>790</width>
-                        <height>279</height>
+                        <width>100</width>
+                        <height>30</height>
                        </rect>
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout_18">
@@ -8677,8 +8814,8 @@ QPushButton:pressed {
                        <rect>
                         <x>0</x>
                         <y>0</y>
-                        <width>790</width>
-                        <height>270</height>
+                        <width>146</width>
+                        <height>68</height>
                        </rect>
                       </property>
                       <layout class="QVBoxLayout" name="verticalLayout">

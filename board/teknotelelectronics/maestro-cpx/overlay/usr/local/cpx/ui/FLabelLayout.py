@@ -243,8 +243,13 @@ class FLabelLayout(QHBoxLayout):
             for i in range(len(signal_sequence[selected_sequence[0]][0].lights)):
                 for j in range(len(signal_sequence[selected_sequence[0]])):
                     if j != sub_id - 1:
-                        get_label(i, j).setData(
-                            [get_label(i, j).draw_list[k] * 10 for k in range(len(get_label(i, j).draw_list))])
+                        temp_draw_list = get_label(i, j).draw_list
+                        for k in range(len(temp_draw_list)):
+                            temp_draw_list[k] = [x + 100 for x in temp_draw_list[k]]
+
+                        get_label(i, j).setData(temp_draw_list)
+                        #get_label(i, j).setData(
+                           # [get_label(i, j).draw_list[k] + 100 for k in range(len(get_label(i, j).draw_list))])
 
             edit_clicked[0] = True
             add_edits_to_h_box(sub_id - 1)

@@ -220,7 +220,7 @@ class deneme(QMainWindow):
         )
 
         self.sendMQTT(
-            MQTTPubTopics.phaseCount.value, {
+            MQTTPubTopics.nsiRequest.value, {
                 SharedValues.actionType.value: SharedValues.actionTypeGet.value,
                 SharedValues.values.value: {}
             }
@@ -239,12 +239,17 @@ class deneme(QMainWindow):
         ### Pre-load log messages
         self.last_log_index = ""
         self.wanted_log_index = ""
+        self.edit_menu_sent = True
         self.sendMQTT(
             MQTTPubTopics.lastLogIndex.value, {
                 SharedValues.actionType.value: SharedValues.actionTypeGet.value,
                 SharedValues.values.value: {}
             }
         )
+
+        self.ui.flash_button.clicked.connect(lambda: self.user_state_request(self.ui.flash_button, MCS_User_Request.FLASH))
+        self.ui.dark_button.clicked.connect(lambda: self.user_state_request(self.ui.dark_button, MCS_User_Request.DARK))
+        self.ui.all_red_button.clicked.connect(lambda: self.user_state_request(self.ui.all_red_button, MCS_User_Request.ALL_RED))
 
     def screen_brightness(self):
         os.system(
@@ -785,8 +790,24 @@ class deneme(QMainWindow):
                 user_file.writelines(str(self.accounts))
                 user_file.close()
 
-            if self.btn_save_message[0] == 1:  # mqtt mesajı yolla [mode,path,message]
+            elif self.btn_save_message[0] == 1:  # mqtt mesajı yolla [mode,path,message]
                 self.sendMQTT(self.btn_save_message[1], self.btn_save_message[2])
+
+            elif self.btn_save_message[0] == 2:  # sigplan edit
+                json_data = {SharedValues.actionType.value: SharedValues.actionTypeSet.value}
+                json_data_values = {"phase": self.btn_save_message[1]}
+                json_data_values_steps = []
+                for i in range(len(signal_sequence[self.btn_save_message[1]])):
+                    json_data_values_steps_step = {
+                        "step": str(i + 1),
+                        "duration": str(signal_sequence[self.btn_save_message[1]][i].duration)
+                    }
+                    json_data_values_steps.append(json_data_values_steps_step)
+                json_data_values["steps"] = json_data_values_steps
+                json_data[SharedValues.values.value] = json_data_values
+
+                print(json.dumps(json_data))
+                self.sendMQTT(MQTTPubTopics.stepEdit.value, json_data)
 
             self.back_fonk()
 
@@ -938,6 +959,8 @@ class deneme(QMainWindow):
         self.thread_sub.signal_gateStateLog.connect(self.fonk_gateStateLog)
         self.thread_sub.signal_MQTT_server_error.connect(self.fonk_MQTT_server_error)
         self.thread_sub.signal_State.connect(self.fonk_State)
+        self.thread_sub.signal_nsiRequest.connect(self.fonk_nsi_request)
+        self.thread_sub.signal_sinRequest.connect(self.fonk_sin_request)
         self.thread_sub.signal_phaseCount.connect(self.fonk_phase_count)
         self.thread_sub.signal_stepCount.connect(self.fonk_step_count)
         self.thread_sub.signal_stepInfo.connect(self.fonk_step_info)
@@ -1210,8 +1233,9 @@ class deneme(QMainWindow):
 
     def fonk_errorRuntime(self, data, status=True):
         if status:
-            # ##print(data)
+            # TODO: only 0 is looked into?
             data = data["values"]["errorRuntimes"][0]
+            self.ui.error_msg_label.setText(self.get_error_string(data["signalingModeSource"]))
             if data["signalingMode"] == 1:
                 self.errorRuntime_error = False
             else:
@@ -1499,12 +1523,57 @@ class deneme(QMainWindow):
         if data["values"]["state"]:
             self.screen_timer(True)
 
+    sin_index = 1
+
+    def fonk_nsi_request(self, data):
+        if self.edit_menu_sent:
+            self.sin_index = 1
+            light_index_count[0] = int(data[SharedValues.values.value]["count"])
+            self.send_sin_req()
+
+    def send_sin_req(self):
+        if self.sin_index <= light_index_count[0]:
+            self.sendMQTT(
+                MQTTPubTopics.sinRequest.value, {
+                    SharedValues.actionType.value: SharedValues.actionTypeGet.value,
+                    SharedValues.values.value: {
+                        "index": str(self.sin_index)
+                    }
+                }
+            )
+        else:
+            self.sendMQTT(
+                MQTTPubTopics.phaseCount.value, {
+                    SharedValues.actionType.value: SharedValues.actionTypeGet.value,
+                    SharedValues.values.value: {}
+                }
+            )
+
+    def fonk_sin_request(self, data):
+        if self.edit_menu_sent:
+            data = [int(i) for i in data[SharedValues.values.value]["count"].split(",")]
+            if data[0] not in list(light_index.keys()):
+                light_index[data[0]] = []
+            for i in range(1, 4):
+                if data[i] == 0:
+                    data[i] = 1
+                elif data[i] == 1:
+                    data[i] = 0
+                elif data[i] in light_flash_periods:
+                    data[i] = 2
+
+            light_index[data[0]] = [data[1], data[2], data[3]]
+
+            self.sin_index += 1
+            self.send_sin_req()
+
     last_sent_phase_index = 1
 
     def fonk_phase_count(self, data):
-        self.last_sent_phase_index = 1
-        seq_length[0] = int(data["values"]["phase"])
-        self.send_step_count()
+        if self.edit_menu_sent:
+            self.last_sent_phase_index = 1
+            seq_length[0] = int(data["values"]["phase"])
+            self.send_step_count()
 
     def send_step_count(self):
         if self.last_sent_phase_index <= seq_length[0]:
@@ -1576,14 +1645,16 @@ class deneme(QMainWindow):
                 )
 
             selected_sequence[0] = ""
+            self.edit_menu_sent = False
 
 
     last_sent_step_index = 1
 
     def fonk_step_count(self, data):
-        self.last_sent_step_index = 1
-        seq_count[self.last_sent_phase_index] = int(data[SharedValues.values.value][StepInfo.steps.value])
-        self.get_each_steps()
+        if self.edit_menu_sent:
+            self.last_sent_step_index = 1
+            seq_count[self.last_sent_phase_index] = int(data[SharedValues.values.value][StepInfo.steps.value])
+            self.get_each_steps()
 
     def get_each_steps(self):
         if self.last_sent_step_index <= seq_count[self.last_sent_phase_index]:
@@ -1601,19 +1672,18 @@ class deneme(QMainWindow):
             self.send_step_count()
 
     def fonk_step_info(self, data):
-        print(data[SharedValues.values.value][StepInfo.steps.value])
-        if str(self.last_sent_phase_index) not in list(signal_sequence.keys()):
-            signal_sequence[str(self.last_sent_phase_index)] = []
-
-        data = [int(i) for i in data[SharedValues.values.value][StepInfo.steps.value].split(",")]
-        light_array = [0 for _ in range(32)]
-        # [0] is phase number, [1] is step number, [2] is duration
-        # [-2] is last light's index, [-1] the last light
-        for i in range(data[-2]):
-            light_array[data[i*2 + 3] - 1] = data[2*i + 4]
-        signal_sequence[str(self.last_sent_phase_index)].append(SignalSequence(light_array, data[2]))
-        self.last_sent_step_index += 1
-        self.get_each_steps()
+        if self.edit_menu_sent:
+            if str(self.last_sent_phase_index) not in list(signal_sequence.keys()):
+                signal_sequence[str(self.last_sent_phase_index)] = []
+            data = [int(i) for i in data[SharedValues.values.value][StepInfo.steps.value].split(",")]
+            light_array = [[0, 0, 0] for _ in range(data[-2])]
+            # [0] is phase number, [1] is step number, [2] is duration
+            # [-2] is last light's index, [-1] the last light
+            for i in range(data[-2]):
+                light_array[data[i*2 + 3] - 1] = light_index[data[2*i + 4]]
+            signal_sequence[str(self.last_sent_phase_index)].append(SignalSequence(light_array, data[2]))
+            self.last_sent_step_index += 1
+            self.get_each_steps()
 
     def btn_incomes_clked(self):
         # TODO Find a better method for screensaver
@@ -1683,13 +1753,75 @@ class deneme(QMainWindow):
         self.ui.stackedWidget_5.setCurrentWidget(
             self.ui.content.findChild(QWidget, "phase_page_" + button)
         )
+        self.btn_save_message = []
+        self.btn_save_message.append(2)
+        self.btn_save_message.append(button)
 
-    def get_from_ui(self, content_type, name):
-        return self.ui.content.findChild(content_type, name)
+        self.btn_save_mode(True)
 
-    ##print("btn_incomes_btntra")
-    ##print(self.ui.stackedWidget_4.currentIndex())
-    ##print(self.ui.stackedWidget_4.parentWidget().objectName())
+    def user_state_request(self, checked_button: QPushButton, mode: MCS_User_Request):
+        for button in [self.ui.flash_button, self.ui.dark_button, self.ui.all_red_button]:
+            if button != checked_button:
+                button.setChecked(False)
+            else:
+                if checked_button.isChecked():
+                    self.sendMQTT(
+                        MQTTPubTopics.userStateRequest.value, {
+                            SharedValues.actionType.value: SharedValues.actionTypeSet.value,
+                            SharedValues.values.value: {
+                                "request": mode.value
+                            }
+                        }
+                    )
+                else:
+                    self.sendMQTT(
+                        MQTTPubTopics.userStateRequest.value, {
+                            SharedValues.actionType.value: SharedValues.actionTypeSet.value,
+                            SharedValues.values.value: {
+                                "request": MCS_User_Request.RETURN.value
+                            }
+                        }
+                    )
+
+    def get_error_string(self, event: int) -> str:
+        if event == Events.EVENT_INVALID_PROGRAM.value:
+            return ErrorStrings[self.currentLang][0]
+        elif event == Events.EVENT_INVALID_SIGNAL.value:
+            return ErrorStrings[self.currentLang][1]
+        elif event == Events.EVENT_INVALID_SIGNAL_SEQUENCE.value:
+            return ErrorStrings[self.currentLang][2]
+        elif event == Events.EVENT_SG_LAST_RED_LAMP_FAILURE.value:
+            return ErrorStrings[self.currentLang][3]
+        elif event == Events.EVENT_SG_NUMBER_OF_RED_LAMPS_FAILURE.value:
+            return ErrorStrings[self.currentLang][4]
+        elif event == Events.EVENT_YELLOW_YELLOW_CONFLICT.value:
+            return ErrorStrings[self.currentLang][5]
+        elif event == Events.EVENT_YELLOW_GREEN_CONFLICT.value:
+            return ErrorStrings[self.currentLang][6]
+        elif event == Events.EVENT_GREEN_GREEN_CONFLICT.value:
+            return ErrorStrings[self.currentLang][7]
+        elif event == Events.EVENT_MODULE_MISSING.value:
+            return ErrorStrings[self.currentLang][8]
+        elif event == Events.EVENT_FREQUENCY_VALUE_LOWER_BOUND.value:
+            return ErrorStrings[self.currentLang][9]
+        elif event == Events.EVENT_FREQUENCY_VALUE_UPPER_BOUND.value:
+            return ErrorStrings[self.currentLang][10]
+        elif event == Events.EVENT_VOLTAGE_VALUE_LOWER_BOUND.value:
+            return ErrorStrings[self.currentLang][11]
+        elif event == Events.EVENT_VOLTAGE_VALUE_UPPER_BOUND.value:
+            return ErrorStrings[self.currentLang][12]
+        elif event == Events.EVENT_SO_WORKING_LAMP_TOTAL_CHANGE.value:
+            return ErrorStrings[self.currentLang][13]
+        elif event == Events.EVENT_CPMP_COMM_MP_CHECKSUM_ERROR.value:
+            return ErrorStrings[self.currentLang][14]
+        elif event == Events.EVENT_CPMP_COMM_MP_RECEIVE_ERROR.value:
+            return ErrorStrings[self.currentLang][15]
+        elif event == Events.EVENT_CPMP_COMM_CP_TIMEOUT.value:
+            return ErrorStrings[self.currentLang][16]
+
+    # print("btn_incomes_btntra")
+    # print(self.ui.stackedWidget_4.currentIndex())
+    # print(self.ui.stackedWidget_4.parentWidget().objectName())
 
     def screen_timer(self, touched=False):
         # ##print("SCREEN AFK TIME RESETTED")
@@ -1710,15 +1842,6 @@ class deneme(QMainWindow):
 
         return super(deneme, self).eventFilter(obj, event)
 
-
-"""
-uygulama = QApplication([])
-window = deneme()
-window.installEventFilter(window)
-# window.showFullScreen()
-window.show()
-uygulama.exec_()
-"""
 
 uygulama = QApplication([])
 scene = QGraphicsScene()
