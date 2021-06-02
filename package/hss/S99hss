@@ -35,6 +35,18 @@ GADGET_DEV_DIR=$GADGET_DIR/custom_hid
 : ${USB_REPORT_DESC:='\x06\xff\x00\x09\x01\xa1\x01\x85\x01\x09\x01\x15\x00\x26\xff\x00\x75\x08\x95\x3f\xb1\x82\x85\x01\x09\x01\x91\x82\x85\x05\x09\x05\x15\x00\x26\xff\x00\x75\x01\x81\x82\x09\x05\x75\x01\xb1\x82\x75\x07\x81\x83\x85\x05\x75\x07\xb1\x83\xc0'}
 : ${USB_FUNCTION:=hid.usb}
 
+power_on_gprs() {
+	gpioset gpiochip0 14=1
+	sleep 1
+	gpioset gpiochip3 10=1
+}
+
+power_off_gprs() {
+	gpioset gpiochip3 10=0
+	sleep 1
+	gpioset gpiochip0 14=0
+}
+
 start_m4() {
 	if [ $RPROC_STATE == "running" ]; then
 		echo "M4 fw already running ..."
@@ -153,7 +165,6 @@ stop_UI() {
 		echo "FAIL"
 	fi
 
-    
 	return "$status"
 }
 
@@ -169,11 +180,13 @@ start() {
 	else
 		echo "FAIL"
 	fi
+
 	return "$status"
 }
 
 stop() {
 	printf 'Stopping %s: ' "$HSS_DAEMON"
+	power_on_gprs
 	stop_UI
 	start-stop-daemon -K -q -p "$HSS_PIDFILE"
 	status=$?
@@ -186,6 +199,7 @@ stop() {
 
 	stop_m4
 	remove_usb_gadget
+	power_off_gprs
 
 	return "$status"
 }

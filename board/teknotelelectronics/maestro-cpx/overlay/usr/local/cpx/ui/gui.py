@@ -4,6 +4,7 @@ import os
 import socket
 # import fcntl
 import struct
+from builtins import isinstance
 
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -239,7 +240,6 @@ class deneme(QMainWindow):
         ### Pre-load log messages
         self.last_log_index = ""
         self.wanted_log_index = ""
-        self.edit_menu_sent = True
         self.sendMQTT(
             MQTTPubTopics.lastLogIndex.value, {
                 SharedValues.actionType.value: SharedValues.actionTypeGet.value,
@@ -250,6 +250,12 @@ class deneme(QMainWindow):
         self.ui.flash_button.clicked.connect(lambda: self.user_state_request(self.ui.flash_button, MCS_User_Request.FLASH))
         self.ui.dark_button.clicked.connect(lambda: self.user_state_request(self.ui.dark_button, MCS_User_Request.DARK))
         self.ui.all_red_button.clicked.connect(lambda: self.user_state_request(self.ui.all_red_button, MCS_User_Request.ALL_RED))
+
+        self.ui.label_saat.mouseReleaseEvent = self.date_label_clicked
+        self.ui.label_tarih.mouseReleaseEvent = self.date_label_clicked
+
+        self.ui.label_2.mouseReleaseEvent = self.gps_label_clicked
+        self.ui.label_26.mouseReleaseEvent = self.gps_label_clicked
 
     def screen_brightness(self):
         os.system(
@@ -1526,10 +1532,9 @@ class deneme(QMainWindow):
     sin_index = 1
 
     def fonk_nsi_request(self, data):
-        if self.edit_menu_sent:
-            self.sin_index = 1
-            light_index_count[0] = int(data[SharedValues.values.value]["count"])
-            self.send_sin_req()
+        self.sin_index = 1
+        light_index_count[0] = int(data[SharedValues.values.value]["count"])
+        self.send_sin_req()
 
     def send_sin_req(self):
         if self.sin_index <= light_index_count[0]:
@@ -1550,30 +1555,28 @@ class deneme(QMainWindow):
             )
 
     def fonk_sin_request(self, data):
-        if self.edit_menu_sent:
-            data = [int(i) for i in data[SharedValues.values.value]["count"].split(",")]
-            if data[0] not in list(light_index.keys()):
-                light_index[data[0]] = []
-            for i in range(1, 4):
-                if data[i] == 0:
-                    data[i] = 1
-                elif data[i] == 1:
-                    data[i] = 0
-                elif data[i] in light_flash_periods:
-                    data[i] = 2
+        data = [int(i) for i in data[SharedValues.values.value]["count"].split(",")]
+        if data[0] not in list(light_index.keys()):
+            light_index[data[0]] = []
+        for i in range(1, 4):
+            if data[i] == 0:
+                data[i] = 1
+            elif data[i] == 1:
+                data[i] = 0
+            elif data[i] in light_flash_periods:
+                data[i] = 2
 
-            light_index[data[0]] = [data[1], data[2], data[3]]
+        light_index[data[0]] = [data[1], data[2], data[3]]
 
-            self.sin_index += 1
-            self.send_sin_req()
+        self.sin_index += 1
+        self.send_sin_req()
 
     last_sent_phase_index = 1
 
     def fonk_phase_count(self, data):
-        if self.edit_menu_sent:
-            self.last_sent_phase_index = 1
-            seq_length[0] = int(data["values"]["phase"])
-            self.send_step_count()
+        self.last_sent_phase_index = 1
+        seq_length[0] = int(data["values"]["phase"])
+        self.send_step_count()
 
     def send_step_count(self):
         if self.last_sent_phase_index <= seq_length[0]:
@@ -1645,16 +1648,14 @@ class deneme(QMainWindow):
                 )
 
             selected_sequence[0] = ""
-            self.edit_menu_sent = False
 
 
     last_sent_step_index = 1
 
     def fonk_step_count(self, data):
-        if self.edit_menu_sent:
-            self.last_sent_step_index = 1
-            seq_count[self.last_sent_phase_index] = int(data[SharedValues.values.value][StepInfo.steps.value])
-            self.get_each_steps()
+        self.last_sent_step_index = 1
+        seq_count[self.last_sent_phase_index] = int(data[SharedValues.values.value][StepInfo.steps.value])
+        self.get_each_steps()
 
     def get_each_steps(self):
         if self.last_sent_step_index <= seq_count[self.last_sent_phase_index]:
@@ -1672,18 +1673,17 @@ class deneme(QMainWindow):
             self.send_step_count()
 
     def fonk_step_info(self, data):
-        if self.edit_menu_sent:
-            if str(self.last_sent_phase_index) not in list(signal_sequence.keys()):
-                signal_sequence[str(self.last_sent_phase_index)] = []
-            data = [int(i) for i in data[SharedValues.values.value][StepInfo.steps.value].split(",")]
-            light_array = [[0, 0, 0] for _ in range(data[-2])]
-            # [0] is phase number, [1] is step number, [2] is duration
-            # [-2] is last light's index, [-1] the last light
-            for i in range(data[-2]):
-                light_array[data[i*2 + 3] - 1] = light_index[data[2*i + 4]]
-            signal_sequence[str(self.last_sent_phase_index)].append(SignalSequence(light_array, data[2]))
-            self.last_sent_step_index += 1
-            self.get_each_steps()
+        if str(self.last_sent_phase_index) not in list(signal_sequence.keys()):
+            signal_sequence[str(self.last_sent_phase_index)] = []
+        data = [int(i) for i in data[SharedValues.values.value][StepInfo.steps.value].split(",")]
+        light_array = [[0, 0, 0] for _ in range(data[-2])]
+        # [0] is phase number, [1] is step number, [2] is duration
+        # [-2] is last light's index, [-1] the last light
+        for i in range(data[-2]):
+            light_array[data[i*2 + 3] - 1] = light_index[data[2*i + 4]]
+        signal_sequence[str(self.last_sent_phase_index)].append(SignalSequence(light_array, data[2]))
+        self.last_sent_step_index += 1
+        self.get_each_steps()
 
     def btn_incomes_clked(self):
         # TODO Find a better method for screensaver
@@ -1818,6 +1818,52 @@ class deneme(QMainWindow):
             return ErrorStrings[self.currentLang][15]
         elif event == Events.EVENT_CPMP_COMM_CP_TIMEOUT.value:
             return ErrorStrings[self.currentLang][16]
+
+    date_click_count = 0
+
+    def date_label_clicked(self, event):
+        # if not logged in, dont do anything
+        if isinstance(self.active_user, int):
+            return
+
+        self.date_click_count += 1
+        double_click_timer = QTimer(self, interval=1500, timeout=self.date_click_reset)
+        double_click_timer.setSingleShot(True)
+        double_click_timer.start()
+
+        if self.date_click_count >= 2:
+            self.widget_history.append(self.ui.stackedWidget_2)
+            self.ui.stackedWidget_2.setCurrentWidget(self.ui.page_mn_item6)
+            self.widget_history.append(self.ui.stackedWidget_3)
+            self.ui.stackedWidget_3.setCurrentWidget(self.ui.page_stgs_time_day)
+            self.page_position_for_label(self.ui.page_stgs_time_day.accessibleName())
+            self.time_set = True
+
+    def date_click_reset(self):
+        self.date_click_count = 0
+
+    gps_click_count = 0
+
+    def gps_label_clicked(self, event):
+        # if not logged in, dont do anything
+        if isinstance(self.active_user, int):
+            return
+
+        self.gps_click_count += 1
+        double_click_timer = QTimer(self, interval=1500, timeout=self.date_click_reset)
+        double_click_timer.setSingleShot(True)
+        double_click_timer.start()
+
+        if self.gps_click_count >= 2:
+            self.widget_history.append(self.ui.stackedWidget_2)
+            self.ui.stackedWidget_2.setCurrentWidget(self.ui.page_mn_item6)
+            self.widget_history.append(self.ui.stackedWidget_3)
+            self.ui.stackedWidget_3.setCurrentWidget(self.ui.page_stgs_connection)
+            self.page_position_for_label(self.ui.page_stgs_connection.accessibleName())
+            self.connection_settings_set = True
+
+    def gps_click_reset(self):
+        self.gps_click_count = 0
 
     # print("btn_incomes_btntra")
     # print(self.ui.stackedWidget_4.currentIndex())

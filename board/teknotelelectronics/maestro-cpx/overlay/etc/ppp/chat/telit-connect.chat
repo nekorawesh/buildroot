@@ -1,0 +1,17 @@
+ECHO
+ON
+ABORT
+'BUSY'
+ABORT
+'NO CARRIER'
+ABORT
+'ERROR'
+ABORT
+'SMS Ready'
+ABORT
+'Call Ready'
+""
+ATZ OK
+\d\dAT+CGDCONT=1,"IP","internet" OK       
+\d\d\dATDT*99# CONNECT
+
