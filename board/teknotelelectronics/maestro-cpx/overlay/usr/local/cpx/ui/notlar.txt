@@ -1,0 +1,19 @@
+<html>
+<head>
+<style>
+p.small {
+  line-height: 0.85;
+}
+</style>
+</head>
+<body>
+
+<p class="small">
+This is a paragraph<br>
+This is a paragrahp<br>
+</p>
+
+
+
+</body>
+</html>

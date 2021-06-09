@@ -1,0 +1,101 @@
+From 1ebc6e523464992ecd12af6eae2666e35596577a Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Wed, 10 Feb 2021 12:52:49 +0300
+Subject: [PATCH] fixed lcd dsi
+
+---
+ arch/arm/boot/dts/maestro-cpx.dts | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
+
+diff --git a/arch/arm/boot/dts/maestro-cpx.dts b/arch/arm/boot/dts/maestro-cpx.dts
+index 9158c7475e86..7bb0e44573f2 100755
+--- a/arch/arm/boot/dts/maestro-cpx.dts
++++ b/arch/arm/boot/dts/maestro-cpx.dts
+@@ -665,7 +665,6 @@
+ 	/* USER CODE BEGIN dsi */
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+-	status = "okay";
+ 
+ 	ports {
+ 		#address-cells = <1>;
+@@ -674,19 +673,19 @@
+ 		port@0 {
+ 			reg = <0>;
+ 			dsi_in: endpoint {
+-				remote-endpoint = <&ltdc_ep1_out>;
++				remote-endpoint = <&ltdc_ep0_out>;
+ 			};
+ 		};
+ 
+ 		port@1 {
+ 			reg = <1>;
+ 			dsi_out: endpoint {
+-				remote-endpoint = <&panel_in>;
++				remote-endpoint = <&dsi_panel_in>;
+ 			};
+ 		};
+ 	};
+ 
+-	panel: panel@0 {
++	panel_dsi: panel-dsi@0 {
+ 		compatible = "orisetech,otm8009a";
+ 		reg = <0>;
+ 		reset-gpios = <&gpioe 4 GPIO_ACTIVE_LOW>;
+@@ -695,7 +694,7 @@
+ 		status = "okay";
+ 
+ 		port {
+-			panel_in: endpoint {
++			dsi_panel_in: endpoint {
+ 				remote-endpoint = <&dsi_out>;
+ 			};
+ 		};
+@@ -721,13 +720,13 @@
+ 	snps,reset-gpio = <&gpioa 5 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low = <1>;
+ 	phy-mode = "mii";
+-	phy-handle = <&phy0>;
++	phy-handle = <&phy1>;
+ 
+ 	mdio0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		compatible = "snps,dwmac-mdio";
+-		phy0: ethernet-phy@1 {
++		phy1: ethernet-phy@1 {
+ 			reg = <1>;
+ 		};
+ 	};
+@@ -777,7 +776,7 @@
+ 		interrupt-controller;
+ 		touchscreen-size-x = <480>;
+ 		touchscreen-size-y = <800>;
+-		panel = <&panel>;
++		panel = <&panel_dsi>;
+ 		status = "okay";
+ 	};
+ 
+@@ -789,7 +788,7 @@
+ 		interrupt-controller;
+ 		touchscreen-size-x = <480>;
+ 		touchscreen-size-y = <800>;
+-		panel = <&panel>;
++		panel = <&panel_dsi>;
+ 		status = "okay";
+ 	};
+ 	/* USER CODE END i2c1 */
+@@ -949,8 +948,8 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		ltdc_ep1_out: endpoint@1 {
+-			reg = <1>;
++		ltdc_ep0_out: endpoint@0 {
++			reg = <0>;
+ 			remote-endpoint = <&dsi_in>;
+ 		};
+ 	};
+-- 
+2.30.0
+

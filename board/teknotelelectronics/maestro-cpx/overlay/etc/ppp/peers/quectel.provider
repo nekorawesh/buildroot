@@ -1,0 +1,5 @@
+file /etc/ppp/quectel-options
+user "gprs"
+password "gprs"
+connect 'chat -s -v -f /etc/ppp/chat/quectel-connect.chat'
+disconnect 'chat -s -v -f /etc/ppp/chat/quectel-disconnect.chat'

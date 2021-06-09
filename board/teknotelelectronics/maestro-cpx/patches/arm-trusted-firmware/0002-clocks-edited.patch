@@ -1,0 +1,290 @@
+From dc353464eae5d82bc88c6f038dad1ff0cd557e64 Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Thu, 7 Jan 2021 14:49:46 +0300
+Subject: [PATCH] clocks edited
+
+---
+ fdts/maestro-cpx.dts  | 87 +++++++++++++++++++++++--------------------
+ fdts/maestro-cpx.dtsi | 26 ++++++-------
+ 2 files changed, 59 insertions(+), 54 deletions(-)
+
+diff --git a/fdts/maestro-cpx.dts b/fdts/maestro-cpx.dts
+index 684cacbb1..c3136783e 100755
+--- a/fdts/maestro-cpx.dts
++++ b/fdts/maestro-cpx.dts
+@@ -203,7 +203,7 @@
+ 		CLK_UART6_DISABLED
+ 		CLK_UART78_HSI
+ 		CLK_SPDIF_DISABLED
+-		CLK_FDCAN_PLL4Q
++		CLK_FDCAN_PLL4R
+ 		CLK_SAI1_DISABLED
+ 		CLK_SAI2_DISABLED
+ 		CLK_SAI3_DISABLED
+@@ -217,17 +217,19 @@
+ 	pll2:st,pll@1 {
+ 		compatible = "st,stm32mp1-pll";
+ 		reg = <1>;
+-		cfg = < 2 63 1 0 0 PQR(1,1,1) >;
++		cfg = < 2 65 1 0 0 PQR(1,1,1) >;
++		frac = < 0x1400 >;
+ 	};
+ 	pll3:st,pll@2 {
+ 		compatible = "st,stm32mp1-pll";
+ 		reg = <2>;
+-		cfg = < 1 49 2 4 5 PQR(1,0,0) >;
++		cfg = < 1 33 1 16 36 PQR(1,0,0) >;
++		frac = < 0x1a04 >;
+ 	};
+ 	pll4:st,pll@3 {
+ 		compatible = "st,stm32mp1-pll";
+ 		reg = <3>;
+-		cfg = < 1 39 3 5 5 PQR(1,1,0) >;
++		cfg = < 3 98 5 7 7 PQR(1,1,1) >;
+ 	};
+ };
+ 
+@@ -343,16 +345,18 @@
+ 				regulator-initial-mode = <0>;
+ 				regulator-over-current-protection;
+ 
+-				lp-stop{
++				lp-stop {
+ 					regulator-on-in-suspend;
+ 					regulator-suspend-microvolt = <1200000>;
+ 				};
+-
+-				standby-ddr-sr{
++				lplv-stop {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <900000>;
++				};
++				standby-ddr-sr {
+ 					regulator-off-in-suspend;
+ 				};
+-
+-				standby-ddr-off{
++				standby-ddr-off {
+ 					regulator-off-in-suspend;
+ 				};
+ 			};
+@@ -365,17 +369,19 @@
+ 				regulator-initial-mode = <0>;
+ 				regulator-over-current-protection;
+ 
+-				lp-stop{
++				lp-stop {
+ 					regulator-suspend-microvolt = <1350000>;
+ 					regulator-on-in-suspend;
+ 				};
+-
+-				standby-ddr-sr{
++				lplv-stop {
+ 					regulator-suspend-microvolt = <1350000>;
+ 					regulator-on-in-suspend;
+ 				};
+-
+-				standby-ddr-off{
++				standby-ddr-sr {
++					regulator-suspend-microvolt = <1350000>;
++					regulator-on-in-suspend;
++				};
++				standby-ddr-off {
+ 					regulator-off-in-suspend;
+ 				};
+ 			};
+@@ -389,17 +395,19 @@
+ 				regulator-initial-mode = <0>;
+ 				regulator-over-current-protection;
+ 
+-				lp-stop{
++				lp-stop {
+ 					regulator-suspend-microvolt = <3300000>;
+ 					regulator-on-in-suspend;
+ 				};
+-
+-				standby-ddr-sr{
++				lplv-stop {
+ 					regulator-suspend-microvolt = <3300000>;
+ 					regulator-on-in-suspend;
+ 				};
+-
+-				standby-ddr-off{
++				standby-ddr-sr {
++					regulator-suspend-microvolt = <3300000>;
++					regulator-on-in-suspend;
++				};
++				standby-ddr-off {
+ 					regulator-suspend-microvolt = <3300000>;
+ 					regulator-on-in-suspend;
+ 				};
+@@ -413,16 +421,10 @@
+ 				regulator-over-current-protection;
+ 				regulator-initial-mode = <0>;
+ 
+-				lp-stop{
+-					regulator-suspend-microvolt = <3300000>;
+-					regulator-on-in-suspend;
+-				};
+-
+-				standby-ddr-sr{
++				standby-ddr-sr {
+ 					regulator-off-in-suspend;
+ 				};
+-
+-				standby-ddr-off{
++				standby-ddr-off {
+ 					regulator-off-in-suspend;
+ 				};
+ 			};
+@@ -449,15 +451,16 @@
+ 				regulator-always-on;
+ 				regulator-over-current-protection;
+ 
+-				lp-stop{
++				lp-stop {
+ 					regulator-off-in-suspend;
+ 				};
+-
+-				standby-ddr-sr{
++				lplv-stop {
+ 					regulator-off-in-suspend;
+ 				};
+-
+-				standby-ddr-off{
++				standby-ddr-sr {
++					regulator-off-in-suspend;
++				};
++				standby-ddr-off {
+ 					regulator-off-in-suspend;
+ 				};
+ 			};
+@@ -497,15 +500,16 @@
+ 				regulator-always-on;
+ 				regulator-over-current-protection;
+ 
+-				lp-stop{
++				lp-stop {
+ 					regulator-on-in-suspend;
+ 				};
+-
+-				standby-ddr-sr{
++				lplv-stop {
+ 					regulator-on-in-suspend;
+ 				};
+-
+-				standby-ddr-off{
++				standby-ddr-sr {
++					regulator-on-in-suspend;
++				};
++				standby-ddr-off {
+ 					regulator-off-in-suspend;
+ 				};
+ 			};
+@@ -515,7 +519,7 @@
+ };
+ 
+ &iwdg1{
+-	secure-status = "okay";
++	secure-status = "disabled";
+ 
+ 	/* USER CODE BEGIN iwdg1 */
+ 	timeout-sec = <32>;
+@@ -523,8 +527,8 @@
+ };
+ 
+ &iwdg2{
+-	status = "okay";
+-	secure-status = "okay";
++	status = "disabled";
++	secure-status = "disabled";
+ 
+ 	/* USER CODE BEGIN iwdg2 */
+ 	timeout-sec = <32>;
+@@ -613,6 +617,8 @@
+ 	secure-status = "okay";
+ 
+ 	/* USER CODE BEGIN timers15 */
++	st,hsi-cal-input = <7>;
++	st,csi-cal-input = <8>;
+ 	/* USER CODE END timers15 */
+ };
+ 
+@@ -633,6 +639,7 @@
+ 	/* USER CODE BEGIN usbotg_hs */
+ 	phys = <&usbphyc_port1 0>;
+ 	phy-names = "usb2-phy";
++	dr_mode = "peripheral";
+ 	/* USER CODE END usbotg_hs */
+ };
+ 
+diff --git a/fdts/maestro-cpx.dtsi b/fdts/maestro-cpx.dtsi
+index 398060581..61dd80c54 100644
+--- a/fdts/maestro-cpx.dtsi
++++ b/fdts/maestro-cpx.dtsi
+@@ -1,8 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0+ OR BSD-3-Clause
+ /*
+- * Copyright (C) 2015-2018, STMicroelectronics - All Rights Reserved
+- *
+- * SPDX-License-Identifier:	GPL-2.0+	BSD-3-Clause
+- *
++ * Copyright (C) 2018, STMicroelectronics - All Rights Reserved
+  */
+ 
+ /*
+@@ -10,15 +8,15 @@
+  * DDR type: DDR3 / DDR3L
+  * DDR width: 16bits
+  * DDR density: 4Gb
+- * System frequency: 512000Khz
++ * System frequency: 533000Khz
+  * Relaxed Timing Mode: false
+  * Address mapping type: RBC
+  *
+- * Save Date: 2021.01.05, save Time: 10:43:11
++ * Save Date: 2020.02.20, save Time: 18:45:20
+  */
+ 
+-#define DDR_MEM_NAME	"DDR3-DDR3L 16bits 512000Khz"
+-#define DDR_MEM_SPEED	512000
++#define DDR_MEM_NAME	"DDR3-DDR3L 16bits 533000Khz"
++#define DDR_MEM_SPEED	533000
+ #define DDR_MEM_SIZE	0x20000000
+ 
+ #define DDR_MSTR 0x00041401
+@@ -31,9 +29,9 @@
+ #define DDR_HWLPCTL 0x00000000
+ #define DDR_RFSHCTL0 0x00210000
+ #define DDR_RFSHCTL3 0x00000000
+-#define DDR_RFSHTMG 0x007C0086
++#define DDR_RFSHTMG 0x0081008B
+ #define DDR_CRCPARCTL0 0x00000000
+-#define DDR_DRAMTMG0 0x121A2314
++#define DDR_DRAMTMG0 0x121B2414
+ #define DDR_DRAMTMG1 0x000A041C
+ #define DDR_DRAMTMG2 0x0608090F
+ #define DDR_DRAMTMG3 0x0050400C
+@@ -85,15 +83,15 @@
+ #define DDR_ADDRMAP10 0x00000000
+ #define DDR_ADDRMAP11 0x00000000
+ #define DDR_PGCR 0x01442E02
+-#define DDR_PTR0 0x00228F9A
+-#define DDR_PTR1 0x045BE800
+-#define DDR_PTR2 0x042D9000
++#define DDR_PTR0 0x0022AA5B
++#define DDR_PTR1 0x04841104
++#define DDR_PTR2 0x042DA068
+ #define DDR_ACIOCR 0x10400812
+ #define DDR_DXCCR 0x00000C40
+ #define DDR_DSGCR 0xF200011F
+ #define DDR_DCR 0x0000000B
+ #define DDR_DTPR0 0x38D488D0
+-#define DDR_DTPR1 0x098600D0
++#define DDR_DTPR1 0x098B00D8
+ #define DDR_DTPR2 0x10023600
+ #define DDR_MR0 0x00000840
+ #define DDR_MR1 0x00000000
+-- 
+2.30.0
+

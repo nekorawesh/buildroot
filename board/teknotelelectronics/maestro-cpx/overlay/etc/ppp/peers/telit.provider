@@ -1,0 +1,3 @@
+file /etc/ppp/telit-options
+connect 'chat -s -v -f /etc/ppp/chat/telit-connect.chat'
+disconnect 'chat -s -v -f /etc/ppp/chat/telit-disconnect.chat'

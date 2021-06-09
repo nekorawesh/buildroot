@@ -1,0 +1,24 @@
+From 29ff047d0a6d9c270769b934c832cf88a2c8c4af Mon Sep 17 00:00:00 2001
+From: Mahdi Noori <nekorawesh@gmail.com>
+Date: Mon, 8 Feb 2021 17:22:12 +0300
+Subject: [PATCH] removed local mac
+
+---
+ arch/arm/dts/maestro-cpx.dts | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/arm/dts/maestro-cpx.dts b/arch/arm/dts/maestro-cpx.dts
+index 986437b5dc..9158c7475e 100755
+--- a/arch/arm/dts/maestro-cpx.dts
++++ b/arch/arm/dts/maestro-cpx.dts
+@@ -720,7 +720,6 @@
+ 	snps,reset-delays-us = <0>, <10000>, <1000000>;
+ 	snps,reset-gpio = <&gpioa 5 GPIO_ACTIVE_LOW>;
+ 	snps,reset-active-low = <1>;
+-	local-mac-address = [00 80 ea 42 69 eb];
+ 	phy-mode = "mii";
+ 	phy-handle = <&phy0>;
+ 
+-- 
+2.30.0
+
