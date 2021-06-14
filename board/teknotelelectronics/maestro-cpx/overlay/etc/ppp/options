@@ -2,23 +2,20 @@
 lock
 modem
 passive
-novj
 noipx
-novjccomp
-nodeflate
+novj
 noccp
+nobsdcomp
 ipcp-accept-local
 ipcp-accept-remote
-local
 refuse-chap
 ipcp-max-failure 30
 defaultroute
 noipdefault
 usepeerdns
+proxyarp
 noauth
 hide-password
 persist
 maxfail 0
 debug
-asyncmap 0xa0000
-logfile /var/log/ppp

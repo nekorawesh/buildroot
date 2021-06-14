@@ -1,7 +1,6 @@
 ABORT "ERROR"
 ABORT "NO DIALTONE"
-SAY "\Disconnectiong...\n"
 "" +++
 "" +++
 "" +++
-SAY "\Disconnected.\n"
+"" ATH0
