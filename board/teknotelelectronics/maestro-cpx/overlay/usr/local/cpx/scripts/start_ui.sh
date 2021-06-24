@@ -7,4 +7,3 @@ if [ -d "$UI_DIR" ]; then
 else
     echo "ui direcotry not found!"       
 fi
-

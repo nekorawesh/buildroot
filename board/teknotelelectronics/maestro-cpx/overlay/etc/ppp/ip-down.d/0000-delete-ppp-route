@@ -1,0 +1,4 @@
+#!/bin/sh -e
+
+ip route delete default
+ip route add default dev eth0

@@ -6,6 +6,7 @@ noipx
 novj
 noccp
 nobsdcomp
+asyncmap 0
 ipcp-accept-local
 ipcp-accept-remote
 refuse-chap
@@ -19,3 +20,4 @@ hide-password
 persist
 maxfail 0
 debug
+logfile /var/log/ppp.log

@@ -1,5 +1,4 @@
 file /etc/ppp/options
 user "gprs"
-password "gprs"
-connect 'chat -s -v -f /etc/ppp/chat/telit-connect.chat'
+connect 'chat -s -v -r /var/log/ppp-report.log -f /etc/ppp/chat/telit-connect.chat'
 disconnect 'chat -s -v -f /etc/ppp/chat/telit-disconnect.chat'

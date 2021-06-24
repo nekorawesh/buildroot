@@ -3,6 +3,10 @@ NET_SYS_CLASS_DIR="/sys/class/net"
 NET_INTERFACE="eth0"
 SERVICES_INIT_DIR="/etc/init.d"
 NET_INIT_SCRIPT="S40network"
+PPP_DIR="/usr/bin"
+PPP_INTERFACE="ppp0"
+PPP_ON_SCRIPT="pon provider"
+PPP_OFF_SCRIPT="poff -a"
 
 MQTT_HOST="localhost"
 MQTT_TOPIC="maestro/hss/heartbeat"
@@ -22,12 +26,20 @@ SERVICES["swupdate"]="S98swupdate"
 SERVICES["dropbear"]="S50dropbear"
 SERVICES["hss"]="S99hss"
 
-isInterfaceUp() {
-    ip link | grep -v '[0-9]: lo:' 2>/dev/null | grep -l '^[0-9].*.UP.*LOWER_UP' >/dev/null 2>&1
+isETHInterfaceUp() {
+    ip link | grep -v "[0-9]: lo:' 2>/dev/null | grep -l '^[0-9]: ${NET_INTERFACE}.*.UP.*LOWER_UP" >/dev/null 2>&1
 }
 
-isNetworkUp() {
-    ip route | grep '^default via ' 2>/dev/null | grep -lv 'linkdown' >/dev/null 2>&1
+isETHNetworkUp() {
+    ip route | grep "^default*.*dev ${NET_INTERFACE}" 2>/dev/null | grep -lv "linkdown" >/dev/null 2>&1
+}
+
+isPPPInterfaceUp() {
+    ip link | grep -v "[0-9]: lo:' 2>/dev/null | grep -l '^[0-9]: ${PPP_INTERFACE}.*.POINTOPOINT.*.UP.*LOWER_UP" >/dev/null 2>&1
+}
+
+isPPPNetworkUp() {
+    ip route | grep "^default*.*dev ${PPP_INTERFACE}" 2>/dev/null | grep -lv "linkdown" >/dev/null 2>&1
 }
 
 isInternetConnected() {
@@ -39,11 +51,21 @@ isInternetConnected() {
 
 checkNetwork() {
     echo "Checking network..."
-    if ! isInterfaceUp || ! isNetworkUp; then
+    if ! isETHInterfaceUp || ! isETHNetworkUp; then
         $SERVICES_INIT_DIR/$NET_INIT_SCRIPT start
     else
         if isInternetConnected; then
             echo "Interface ${NET_INTERFACE} up, internet connected."
+        fi
+    fi
+
+    if ! isPPPInterfaceUp || ! isPPPNetworkUp; then
+        $PPP_DIR/$PPP_OFF_SCRIPT
+        sleep 1
+        $PPP_DIR/$PPP_ON_SCRIPT
+    else
+        if isInternetConnected; then
+            echo "Interface ${PPP_INTERFACE} up, internet connected."
         fi
     fi
 }

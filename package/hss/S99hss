@@ -38,13 +38,21 @@ GADGET_DEV_DIR=$GADGET_DIR/custom_hid
 power_on_gprs() {
 	gpioset gpiochip0 14=1
 	sleep 1
-	gpioset gpiochip3 10=1
+	gpioset gpiochip3 10=0
 }
 
 power_off_gprs() {
-	gpioset gpiochip3 10=0
+	gpioset gpiochip3 10=1
 	sleep 1
 	gpioset gpiochip0 14=0
+}
+
+start_ppp() {
+	/usr/bin/pon
+}
+
+stop_ppp() {
+	/usr/bin/poff -a
 }
 
 start_m4() {
@@ -171,6 +179,8 @@ stop_UI() {
 start() {
 	printf 'Starting %s: ' "$HSS_DAEMON"
 	start_m4
+	power_on_gprs
+	start_ppp
 	add_usb_gadget
 	start-stop-daemon -b -m -S -q -p "$HSS_PIDFILE" -x "$USER_LOCAL_BIN_DIR/$HSS_DAEMON" -- $HSS_DAEMON_ARGS
 	status=$?
@@ -186,7 +196,6 @@ start() {
 
 stop() {
 	printf 'Stopping %s: ' "$HSS_DAEMON"
-	power_on_gprs
 	stop_UI
 	start-stop-daemon -K -q -p "$HSS_PIDFILE"
 	status=$?
@@ -199,6 +208,7 @@ stop() {
 
 	stop_m4
 	remove_usb_gadget
+	stop_ppp
 	power_off_gprs
 
 	return "$status"
