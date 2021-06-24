@@ -1,0 +1,23 @@
+/dev/ttySTM3 115200 crtscts
+lock
+modem
+passive
+noipx
+novj
+noccp
+nobsdcomp
+asyncmap 0
+ipcp-accept-local
+ipcp-accept-remote
+refuse-chap
+ipcp-max-failure 30
+defaultroute
+noipdefault
+usepeerdns
+proxyarp
+noauth
+hide-password
+persist
+maxfail 0
+debug
+logfile /var/log/ppp.log
