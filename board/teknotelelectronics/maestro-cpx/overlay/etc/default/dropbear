@@ -1,0 +1,4 @@
+#!/bin/sh
+
+DROPBEAR_ARGS="-s -g"
+export DROPBEAR_ARGS
