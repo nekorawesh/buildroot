@@ -1,0 +1,5 @@
+#!/bin/sh
+
+IPV4_RULES="/etc/iptables/rules.v4"
+test -e $IPV4_RULES || exit 1
+iptables-restore < $IPV4_RULES

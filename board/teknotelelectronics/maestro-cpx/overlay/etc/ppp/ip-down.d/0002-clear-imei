@@ -1,0 +1,7 @@
+#!/bin/bash
+
+PPP_GPRS_IMEI="/var/log/ppp-gprs-imei.txt"
+
+if [ -e $PPP_GPRS_IMEI ]; then
+	echo -n "" > $PPP_GPRS_IMEI                        
+fi

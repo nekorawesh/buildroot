@@ -1,0 +1,14 @@
+#!/bin/bash
+
+PPP_REPORT="/var/log/ppp-report.log"
+PPP_GPRS_IMEI="/var/log/ppp-gprs-imei.txt"
+
+if [ -e $PPP_REPORT ]; then
+        while IFS= read -r line
+        do
+                if [[ $line == *"CGSN:"* ]]; then
+                        imei=$(echo $line | cut -d ":" -f 5- | tr -d ' ')
+                        echo $imei > $PPP_GPRS_IMEI
+        fi
+        done < "$PPP_REPORT"
+fi

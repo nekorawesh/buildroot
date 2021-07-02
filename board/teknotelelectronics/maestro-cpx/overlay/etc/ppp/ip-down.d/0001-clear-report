@@ -1,0 +1,7 @@
+#!/bin/bash
+
+PPP_REPORT="/var/log/ppp-report.log"
+
+if [ -e $PPP_REPORT ]; then
+        echo -n "" > $PPP_REPORT
+fi
