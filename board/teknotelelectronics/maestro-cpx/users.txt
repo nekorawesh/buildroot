@@ -1,0 +1,2 @@
+    teknotel -1 teknotel -1 =t@Maestro_CPX:5.4 /home/teknotel /bin/bash adm,cdrom,sudo,wheel,plugdev Teknotel Electronics user
+    
